@@ -1,0 +1,8 @@
+{
+  "name": "泰宇生命教育互動探索站",
+  "description": "一個專為生命教育設計的互動學習平台。學生可在此填寫「WOOP 心理韌性防護甲」與「生前特展」學習單或反思日記，老師能即時批改給予反饋，並具備課堂討論與統計功能，讓教學與學習更加生動深刻。",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,377 @@
+{
+  "submissions": [
+    {
+      "studentId": "stud_kehua",
+      "studentName": "陳可華",
+      "woop": {
+        "wish": "我希望在學期末數學成績進步到 90 分以上，並且能更勇敢地面對不懂的公式。",
+        "outcome": "如果順利達成，我會感到非常踏實與驕傲！爸爸也會為我慶祝，我就能更有自信地挑戰更難的章節。",
+        "obstacle": "我的最大障礙是每次寫題目卡關時，我就會心煩意亂，然後不自覺拿起手機開始滑，逃避思考。",
+        "plan": "當我「遇到不會的題目且開始感到心煩」時，我就會「把手機放到客廳，並深呼吸三次，接著翻開筆記本看之前的錯題本，或者傳訊息問博士小文」。",
+        "currentStep": 4,
+        "submitted": true,
+        "submittedAt": "2026-07-04 14:20",
+        "feedback": {
+          "comments": "可華的 WOOP 規劃非常具體，特別是針對「滑手機逃避」這個障礙設定的「如果...就...」行動計畫非常實用！相信照著這個計畫實踐，數學成績一定能穩步提升。加油！",
+          "gradedBy": "林老師",
+          "gradedAt": "2026-07-04 18:30",
+          "badges": [
+            "勇敢追夢中",
+            "韌性練習中"
+          ],
+          "score": 95
+        }
+      },
+      "exhibition": {
+        "rememberMe": "我希望大家記得我是一個溫暖、貼心、而且在別人沮喪時，願意安靜陪在他們身邊傾聽的朋友。雖然我有時會猶豫不決，但我對朋友的愛與真誠從來不打折。",
+        "keywords": [
+          "善良",
+          "同理心",
+          "感恩",
+          "責任",
+          "愛"
+        ],
+        "oneLiner": "生命就像一場未知終點的巴士旅行，重要的不是目的地，而是路上我們與誰溫暖同行。",
+        "timeline": [
+          {
+            "id": "1",
+            "year": "小學三年級",
+            "text": "第一次領養流浪貓「咪咪」，學會照顧另一個生命的責任。"
+          },
+          {
+            "id": "2",
+            "year": "國中二年級",
+            "text": "因為數學不及格感到挫折，在爺爺的開導下理解到失敗也是成長的印記。"
+          },
+          {
+            "id": "3",
+            "year": "高中一年級",
+            "text": "當選班長，開始學習如何帶領團體、理解與包容不同聲音。"
+          },
+          {
+            "id": "4",
+            "year": "現在的我",
+            "text": "策劃這個「生前特展」，重新審視自己的內心與核心價值。"
+          }
+        ],
+        "submitted": true,
+        "submittedAt": "2026-07-05 10:15"
+      }
+    },
+    {
+      "studentId": "stud_xiaoping",
+      "studentName": "張曉萍",
+      "woop": {
+        "wish": "我希望能夠在接下來的班際排球賽中，擔任好副隊長的角色，帶領大家每天準時晨練。",
+        "outcome": "全班會更加凝聚，不管比賽輸贏，我們都留下了無悔、揮灑汗水的青春回憶！",
+        "obstacle": "有些同學早上起不來，或者排斥辛苦的練習，我會害怕去催促他們而造成人際關係緊張。",
+        "plan": "當我「需要通知大家練習但感到猶豫害怕」時，我就會「先寫好溫馨的提醒小卡，並拉著康樂股長博鈞一起去幽默地呼喚大家」。",
+        "currentStep": 4,
+        "submitted": true,
+        "submittedAt": "2026-07-05 08:30",
+        "feedback": {
+          "comments": "曉萍展現了極佳的領導風範與同理心。結合博鈞的幽默感來化解人際摩擦是一個非常聰明的做法！老師很期待看見你們在球場上的默契表現！",
+          "gradedBy": "林老師",
+          "gradedAt": "2026-07-05 11:00",
+          "badges": [
+            "勇敢追夢中",
+            "思考小高手"
+          ],
+          "score": 98
+        }
+      },
+      "exhibition": {
+        "rememberMe": "希望大家記得我是一個充滿活力、不管遇到什麼陰天，都能為大家帶來一絲陽光的女孩！",
+        "keywords": [
+          "勇敢",
+          "堅持",
+          "樂觀",
+          "愛",
+          "自由"
+        ],
+        "oneLiner": "生活不一定要完美，但一定要熱氣騰騰！",
+        "timeline": [
+          {
+            "id": "1",
+            "year": "2020年",
+            "text": "第一次獨自去台東參加單車挑戰營，發現自己比想像中更堅強。"
+          },
+          {
+            "id": "2",
+            "year": "2022年",
+            "text": "外婆去世，第一次面對至親離別，深刻體悟珍惜當下的意義。"
+          },
+          {
+            "id": "3",
+            "year": "2025年",
+            "text": "加入學校排球隊，找到願意一起流汗拼搏的夥伴們。"
+          }
+        ],
+        "submitted": true,
+        "submittedAt": "2026-07-05 09:00",
+        "feedback": {
+          "comments": "非常動人的生命之旅！「生活不一定要完美，但一定要熱氣騰騰」這句話特別有力量，完美契合曉萍熱情開朗的靈魂！",
+          "gradedBy": "林老師",
+          "gradedAt": "2026-07-05 15:30",
+          "badges": [
+            "思考小高手",
+            "未來的自己"
+          ],
+          "score": 96
+        }
+      }
+    },
+    {
+      "studentId": "stud_bojun",
+      "studentName": "王博鈞",
+      "woop": {
+        "wish": "希望自己能每天早睡，在 11:30 之前躺平，不要再熬夜打電動。",
+        "outcome": "上課不會打瞌睡，打籃球的時候體能爆表，而且皮膚會變好，不再長痘痘。",
+        "obstacle": "一到晚上 11 點，隊友就上線邀我組隊，抗拒不了連勝的誘惑。",
+        "plan": "當「時間到 11:15 隊友呼喚我」時，我就會「在遊戲群組發個『我要去拯救世界(睡覺)了』貼圖，然後果斷關閉電腦電源」。",
+        "currentStep": 4,
+        "submitted": true,
+        "submittedAt": "2026-07-05 16:22"
+      },
+      "exhibition": {
+        "rememberMe": "希望大家記得我是一個超級無敵幽默、講義氣，能給所有人帶來歡笑的熱血籃球少年！只要有我在的地方，就不會有尷尬和無聊！",
+        "keywords": [
+          "勇敢",
+          "善良",
+          "樂觀",
+          "誠實",
+          "自由"
+        ],
+        "oneLiner": "球場上沒有絕境，只有不肯奔跑的雙腳！",
+        "timeline": [
+          {
+            "id": "1",
+            "year": "小學五年級",
+            "text": "第一次在關鍵時刻投進三分球，贏得全校聯賽冠軍，從此愛上籃球。"
+          },
+          {
+            "id": "2",
+            "year": "國中三年級",
+            "text": "腳踝嚴重扭傷骨裂，休養了半年。那段時間學會了忍耐與在場邊當最佳啦啦隊。"
+          }
+        ],
+        "submitted": true,
+        "submittedAt": "2026-07-05 17:10"
+      }
+    },
+    {
+      "studentId": "stud_xiaowen",
+      "studentName": "王小文",
+      "woop": {
+        "wish": "我希望在下個月的全國生物學科能力競賽中獲得前三名。",
+        "outcome": "能證明自己長久以來的學術探究是有價值的，並取得保送大學推薦的門票。",
+        "obstacle": "背誦神經系統和分類學部分非常枯燥，且常常因為焦慮而失眠。",
+        "plan": "當我「晚上躺在床上感到焦慮睡不著」時，我就會「聽 10 分鐘白噪音，並回想今天學到的三個最有趣的生物機制，不再去想名次」。",
+        "currentStep": 4,
+        "submitted": true,
+        "submittedAt": "2026-07-05 11:45",
+        "feedback": {
+          "comments": "小文的抱負令人激賞！懂得在高度焦慮中轉移注意力，尋找生物機制的趣味，是極具智慧的調適方法。老師對妳信心十足！",
+          "gradedBy": "林老師",
+          "gradedAt": "2026-07-05 14:00",
+          "badges": [
+            "思考小高手",
+            "韌性練習中"
+          ],
+          "score": 99
+        }
+      },
+      "exhibition": {
+        "rememberMe": "希望大家記得我是一個對真理有不懈追求、嚴謹認真，同時對大自然所有奧秘充滿敬畏的探求者。",
+        "keywords": [
+          "堅持",
+          "創造力",
+          "誠實",
+          "學習",
+          "責任"
+        ],
+        "oneLiner": "世界上只有兩種東西能震撼我的心靈：頂上燦爛的星空，和我們內心崇高的道德法則。",
+        "timeline": [
+          {
+            "id": "1",
+            "year": "2019年",
+            "text": "第一次用顯微鏡觀察植物細胞壁與葉綠體，被微觀世界的秩序之美深深震撼。"
+          },
+          {
+            "id": "2",
+            "year": "2023年",
+            "text": "代表學校參加辯論賽，學會從對立面思考事物的多維本質。"
+          }
+        ],
+        "submitted": true,
+        "submittedAt": "2026-07-05 15:00"
+      }
+    },
+    {
+      "studentId": "user_1783319238744",
+      "studentName": "99",
+      "woop": {
+        "wish": "",
+        "outcome": "",
+        "obstacle": "",
+        "plan": "",
+        "currentStep": 1,
+        "submitted": false
+      },
+      "exhibition": {
+        "rememberMe": "",
+        "keywords": [],
+        "oneLiner": "",
+        "timeline": [],
+        "submitted": false
+      }
+    }
+  ],
+  "registeredUsers": [
+    {
+      "id": "stud_kehua",
+      "username": "kehua",
+      "password": "123",
+      "name": "陳可華",
+      "role": "student",
+      "avatarEmoji": "👦🏻",
+      "avatarUrl": "/uploads/char_kehua_1783322980853.png"
+    },
+    {
+      "id": "stud_xiaoping",
+      "username": "xiaoping",
+      "password": "123",
+      "name": "張曉萍",
+      "role": "student",
+      "avatarEmoji": "👩🏻",
+      "avatarUrl": "/uploads/stud_xiaoping_1783323180764.png"
+    },
+    {
+      "id": "stud_bojun",
+      "username": "bojun",
+      "password": "123",
+      "name": "王博鈞",
+      "role": "student",
+      "avatarEmoji": "🏀",
+      "avatarUrl": "/uploads/char_bojun_1783322992868.png"
+    },
+    {
+      "id": "stud_xiaowen",
+      "username": "xiaowen",
+      "password": "123",
+      "name": "王小文",
+      "role": "student",
+      "avatarEmoji": "👧🏻",
+      "avatarUrl": "/uploads/char_xiaowen_1783323000731.png"
+    },
+    {
+      "id": "teacher_lin",
+      "username": "teacher",
+      "password": "123",
+      "name": "林老師",
+      "role": "teacher",
+      "avatarEmoji": "👩🏻‍🏫"
+    },
+    {
+      "id": "user_1783319238744",
+      "username": "995110",
+      "password": "123",
+      "name": "99",
+      "role": "student",
+      "avatarEmoji": "🎒"
+    }
+  ],
+  "characters": [
+    {
+      "id": "char_kehua",
+      "name": "陳可華",
+      "role": "班長",
+      "gender": "M",
+      "relationshipRole": "主角",
+      "bio": "關心他人但不善表達，個性隨和，和每個人都可以聊得來；做事情常常三分熱度，想要找到喜歡的事情，但有很多不確定感，有點多愁善感，有時又帶點樂觀。",
+      "tags": [
+        "溫和細心",
+        "善於觀察",
+        "有時猶豫"
+      ],
+      "avatarEmoji": "👦🏻",
+      "avatarUrl": "/uploads/char_kehua_1783322980853.png"
+    },
+    {
+      "id": "char_bojun",
+      "name": "王博鈞",
+      "role": "康樂股長",
+      "gender": "M",
+      "relationshipRole": "死黨 / 開心果",
+      "bio": "是陳可華的好麻吉。喜歡打籃球，是籃球隊長。個性開朗樂觀且樂於助人，總能帶動氣氛，在團隊中扮演開心果的角色，擔任班上的康樂股長。",
+      "tags": [
+        "樂觀開朗",
+        "熱心助人",
+        "愛開玩笑"
+      ],
+      "avatarEmoji": "🏀",
+      "avatarUrl": "/uploads/char_bojun_1783322992868.png"
+    },
+    {
+      "id": "char_xiaowen",
+      "name": "王小文",
+      "role": "學霸「博士」",
+      "gender": "F",
+      "relationshipRole": "學業顧問 / 同學",
+      "bio": "認真讀書，各科表現優異，上課常常發問，參加生物科學研究社。個性穩重、有主見，不易受別人影響。可華遇到學業問題時，常會向她請教。",
+      "tags": [
+        "認真負責",
+        "思考細膩",
+        "主見穩重"
+      ],
+      "avatarEmoji": "👧🏻",
+      "avatarUrl": "/uploads/char_xiaowen_1783323000731.png"
+    },
+    {
+      "id": "char_xiaoping",
+      "name": "張曉萍",
+      "role": "副班長",
+      "gender": "F",
+      "relationshipRole": "暖心好友",
+      "bio": "溫柔體貼，擅長傾聽。做事有條不紊，常常主動關心周遭需要幫助的人，是班上凝聚向心力的溫暖存在。與陳可華是鄰居兼好友。",
+      "tags": [
+        "同理心強",
+        "善解人意",
+        "意志堅定"
+      ],
+      "avatarEmoji": "👩🏻",
+      "avatarUrl": "/uploads/char_xiaoping_1783323180741.png"
+    },
+    {
+      "id": "char_dad",
+      "name": "可華爸爸",
+      "role": "可華爸爸",
+      "gender": "M",
+      "relationshipRole": "父親 (家庭支持力量)",
+      "bio": "理解可華的想法與感受，總在他需要時給予溫暖支持，是可華最堅強的後盾，用開明和厚實的肩膀守護家庭。",
+      "tags": [
+        "成熟穩重",
+        "關愛包容"
+      ],
+      "avatarEmoji": "👨🏻",
+      "avatarUrl": "/uploads/char_dad_1783323022425.png",
+      "isFamily": true
+    },
+    {
+      "id": "char_grandpa",
+      "name": "可華爺爺",
+      "role": "可華爺爺",
+      "gender": "M",
+      "relationshipRole": "祖父 (家庭支持力量)",
+      "bio": "用人生經驗陪伴可華，常以故事啟發他思考，教會他從不同角度看世界。個性豁達，總是帶著溫和的笑容。",
+      "tags": [
+        "慈祥智慧",
+        "經驗豐富",
+        "樂觀豁達"
+      ],
+      "avatarEmoji": "👴🏻",
+      "avatarUrl": "/uploads/char_grandpa_1783323030391.jpeg",
+      "isFamily": true
+    }
+  ]
+}
