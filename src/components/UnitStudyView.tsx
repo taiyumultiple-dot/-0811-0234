@@ -18,10 +18,19 @@ import {
   UserCheck, 
   Activity,
   MessageSquare,
-  FileText
+  FileText,
+  ListChecks,
+  Send,
+  Users
 } from 'lucide-react';
 import { StudentSubmission } from '../types';
 import { UNIT_DATA } from '../data';
+import {
+  UnitQuestion,
+  buildQuestionList,
+  formatAnswerValue,
+  hasAnswer
+} from '../questions';
 
 import Unit00TextbookPageViewer from './Unit00TextbookPageViewer';
 import Unit01TextbookPageViewer from './Unit01TextbookPageViewer';
@@ -38,6 +47,9 @@ interface UnitStudyViewProps {
   onChangeSubmissions: (subs: StudentSubmission[]) => void;
   activeStudentId: string;
   role: 'student' | 'teacher';
+  /** 從全班總覽點進來時直接落在批改分頁 */
+  initialTab?: 'textbook' | 'feedback';
+  teacherName?: string;
 }
 
 export default function UnitStudyView({
@@ -47,7 +59,9 @@ export default function UnitStudyView({
   submissions,
   onChangeSubmissions,
   activeStudentId,
-  role
+  role,
+  initialTab = 'textbook',
+  teacherName = '林老師'
 }: UnitStudyViewProps) {
   
   // Toast notifications state
@@ -88,7 +102,93 @@ export default function UnitStudyView({
   }, [selectedStudentId, unitId, currentSubmission]);
 
   // Active Tab: 'textbook' or 'feedback'
-  const [activeTab, setActiveTab] = useState<'textbook' | 'feedback'>('textbook');
+  const [activeTab, setActiveTab] = useState<'textbook' | 'feedback'>(initialTab);
+
+  // 批改分頁裡的兩種模式：逐題檢視全班 / 整單元總評
+  const [gradingMode, setGradingMode] = useState<'byQuestion' | 'summary'>('byQuestion');
+
+  // 這一單元的題目清單（含舊資料裡才有的題目）
+  const unitQuestions: UnitQuestion[] = buildQuestionList(
+    unitId,
+    submissions.map(s => s.unitWorksheets?.[unitId])
+  );
+
+  // 逐題檢視目前選中的題目
+  const [selectedQuestionId, setSelectedQuestionId] = useState<string>(unitQuestions[0]?.id || '');
+  const selectedQuestion = unitQuestions.find(q => q.id === selectedQuestionId) || unitQuestions[0];
+
+  useEffect(() => {
+    setSelectedQuestionId(prev =>
+      unitQuestions.some(q => q.id === prev) ? prev : (unitQuestions[0]?.id || '')
+    );
+  }, [unitId]);
+
+  // 每個學生的回覆草稿（切題目時重新以既有回覆填入）
+  const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const drafts: Record<string, string> = {};
+    submissions.forEach(sub => {
+      drafts[sub.studentId] =
+        sub.unitWorksheets?.[unitId]?.replies?.[selectedQuestionId]?.text || '';
+    });
+    setReplyDrafts(drafts);
+  }, [selectedQuestionId, unitId]);
+
+  /** 某一題的統計：全班作答幾人、已回幾人 */
+  const questionStats = (questionId: string) => {
+    let answered = 0;
+    let replied = 0;
+    submissions.forEach(sub => {
+      const ws = sub.unitWorksheets?.[unitId];
+      if (hasAnswer(ws?.answers?.[questionId])) {
+        answered += 1;
+        if (ws?.replies?.[questionId]?.text) replied += 1;
+      }
+    });
+    return { answered, replied, pending: answered - replied };
+  };
+
+  /** 寫入（或清除）某位學生某一題的老師回覆 */
+  const handleSaveReply = (studentId: string, questionId: string, text: string) => {
+    const trimmed = text.trim();
+
+    const updatedSubmissions = submissions.map(sub => {
+      if (sub.studentId !== studentId) return sub;
+
+      const existingWorksheets = sub.unitWorksheets || {};
+      const currentWS = existingWorksheets[unitId] || { answers: {}, submitted: false };
+      const nextReplies = { ...(currentWS.replies || {}) };
+
+      if (trimmed) {
+        nextReplies[questionId] = {
+          text: trimmed,
+          by: teacherName,
+          at: new Date().toISOString().replace('T', ' ').substring(0, 16)
+        };
+      } else {
+        delete nextReplies[questionId];
+      }
+
+      return {
+        ...sub,
+        unitWorksheets: {
+          ...existingWorksheets,
+          [unitId]: { ...currentWS, replies: nextReplies }
+        }
+      };
+    });
+
+    onChangeSubmissions(updatedSubmissions);
+
+    const studentName = submissions.find(s => s.studentId === studentId)?.studentName || '學生';
+    setToast({
+      message: trimmed
+        ? `✅ 已回覆 ${studentName} 的這一題！`
+        : `🗑️ 已移除 ${studentName} 這一題的回覆。`,
+      type: trimmed ? 'success' : 'info'
+    });
+  };
 
   // Teacher feedback form states
   const [teacherComments, setTeacherComments] = useState<string>('');
@@ -221,7 +321,7 @@ export default function UnitStudyView({
 
     const feedbackObj = {
       comments: teacherComments,
-      gradedBy: '林老師',
+      gradedBy: teacherName,
       gradedAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
       badges: teacherBadges,
       score: teacherScore
@@ -290,7 +390,8 @@ export default function UnitStudyView({
       setAnswers,
       role,
       isSubmitted,
-      onFinishUnit: handleFinishUnit
+      onFinishUnit: handleFinishUnit,
+      replies: currentUnitWorksheet.replies
     };
 
     switch (unitId) {
@@ -316,6 +417,14 @@ export default function UnitStudyView({
   };
 
   const unitName = UNIT_DATA.find(u => u.id === unitId)?.title || "生命探索單元";
+
+  // 整單元總評那一整區：學生一定看得到，老師只在「整單元總評」模式下看到
+  const showSummaryBlocks = role === 'student' || gradingMode === 'summary';
+
+  // 學生已經收到的逐題回覆
+  const myRepliedQuestions = unitQuestions.filter(
+    q => currentUnitWorksheet.replies?.[q.id]?.text
+  );
 
   return (
     <div className="bg-white rounded-3xl border border-blue-100 p-6 shadow-sm min-h-[600px] flex flex-col justify-between relative">
@@ -430,7 +539,8 @@ export default function UnitStudyView({
         >
           <MessageSquare className="w-4 h-4" />
           {role === 'teacher' ? '👩‍🏫 批改與點評回饋' : '💬 老師批改反饋'}
-          {currentUnitWorksheet.feedback && (
+          {(currentUnitWorksheet.feedback ||
+            Object.keys(currentUnitWorksheet.replies || {}).length > 0) && (
             <span className="absolute top-1.5 right-1 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
           )}
         </button>
@@ -495,7 +605,9 @@ export default function UnitStudyView({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.15 }}
-              className="space-y-6 flex-1 max-w-3xl mx-auto w-full py-2"
+              className={`space-y-6 flex-1 mx-auto w-full py-2 ${
+                role === 'teacher' && gradingMode === 'byQuestion' ? 'max-w-6xl' : 'max-w-3xl'
+              }`}
             >
               {/* Feedback viewing and grading container */}
               <div className="bg-[#FCFAF7] border border-[#F5EAD6] p-6 rounded-3xl space-y-6 shadow-3xs">
@@ -511,8 +623,206 @@ export default function UnitStudyView({
                   </p>
                 </div>
 
-                {/* Show Student Answers Review Box for Teacher or summary check */}
+                {/* 老師：兩種批改模式 */}
                 {role === 'teacher' && (
+                  <div className="flex flex-wrap gap-2 bg-white border border-slate-200/80 p-1.5 rounded-2xl shadow-3xs">
+                    {([
+                      { key: 'byQuestion', label: '🧩 逐題檢視（全班）' },
+                      { key: 'summary', label: '📋 整單元總評' }
+                    ] as const).map(m => (
+                      <button
+                        key={m.key}
+                        onClick={() => setGradingMode(m.key)}
+                        className={`flex-1 min-w-[150px] px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                          gradingMode === m.key
+                            ? 'bg-[#E65100] text-white shadow-xs'
+                            : 'bg-white text-slate-500 hover:bg-slate-50'
+                        }`}
+                      >
+                        {m.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* 逐題檢視：選一題，全班對這一題的作答並排列出 */}
+                {role === 'teacher' && gradingMode === 'byQuestion' && (
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+
+                    {/* 左：題目清單 */}
+                    <div className="lg:col-span-4 bg-white border border-slate-200/80 rounded-2xl p-3 space-y-1.5 max-h-[620px] overflow-y-auto shadow-3xs">
+                      <h4 className="text-xs font-black text-slate-800 px-1.5 pb-2 border-b border-slate-100 flex items-center gap-1.5 sticky top-0 bg-white">
+                        <ListChecks className="w-4 h-4 text-[#E65100]" />
+                        題目清單（{unitQuestions.length} 題）
+                      </h4>
+                      {unitQuestions.map(q => {
+                        const stat = questionStats(q.id);
+                        const isActive = q.id === selectedQuestionId;
+                        return (
+                          <button
+                            key={q.id}
+                            onClick={() => setSelectedQuestionId(q.id)}
+                            className={`w-full text-left p-2.5 rounded-xl border transition-all cursor-pointer space-y-1 relative ${
+                              isActive
+                                ? 'bg-[#FFF3E0] border-[#F5C99B] shadow-3xs'
+                                : 'bg-white border-slate-100 hover:border-slate-200 hover:bg-slate-50'
+                            }`}
+                          >
+                            {stat.pending > 0 && (
+                              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                            )}
+                            <span className={`font-mono text-[10px] font-black ${isActive ? 'text-[#B4570B]' : 'text-slate-400'}`}>
+                              {q.code}
+                            </span>
+                            <p className={`text-[11px] font-bold leading-snug line-clamp-2 ${isActive ? 'text-[#5C4538]' : 'text-slate-700'}`}>
+                              {q.title}
+                            </p>
+                            <span className={`text-[10px] font-black ${
+                              stat.pending > 0 ? 'text-red-500' : stat.answered > 0 ? 'text-emerald-600' : 'text-slate-300'
+                            }`}>
+                              已回 {stat.replied} / 作答 {stat.answered}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* 右：全班對這一題寫了什麼 */}
+                    <div className="lg:col-span-8 space-y-3">
+                      {selectedQuestion ? (
+                        <>
+                          <div className="bg-[#FFF8F3] border border-[#F5E6D8] rounded-2xl p-4 space-y-1.5">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="px-2.5 py-0.5 bg-[#FDE2D1] text-[#A84A30] rounded-md text-[10px] font-black font-mono">
+                                {selectedQuestion.code}
+                              </span>
+                              <span className="text-xs font-black text-[#5C4538]">{selectedQuestion.title}</span>
+                              <span className="ml-auto text-[10px] font-black text-[#8A7568] flex items-center gap-1">
+                                <Users className="w-3.5 h-3.5" />
+                                全班 {submissions.length} 人
+                              </span>
+                            </div>
+                            <p className="text-xs font-bold text-[#7A6255] leading-relaxed">{selectedQuestion.prompt}</p>
+                          </div>
+
+                          {submissions.map(sub => {
+                            const ws = sub.unitWorksheets?.[unitId];
+                            const answerText = formatAnswerValue(selectedQuestion, ws?.answers?.[selectedQuestion.id]);
+                            const existingReply = ws?.replies?.[selectedQuestion.id];
+                            const draft = replyDrafts[sub.studentId] ?? '';
+                            const isDirty = draft.trim() !== (existingReply?.text || '');
+
+                            return (
+                              <div
+                                key={sub.studentId}
+                                className="bg-white border border-slate-200/80 rounded-2xl p-4 space-y-3 shadow-3xs"
+                              >
+                                <div className="flex items-center gap-2 flex-wrap border-b border-slate-100 pb-2.5">
+                                  <span className="text-xs font-black text-slate-800">{sub.studentName}</span>
+                                  <span className={`text-[9px] font-black px-2 py-0.5 rounded-lg ${
+                                    ws?.submitted ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                                  }`}>
+                                    {ws?.submitted ? '已提交' : '未提交'}
+                                  </span>
+                                  {existingReply && (
+                                    <span className="text-[9px] font-black px-2 py-0.5 rounded-lg bg-[#FFF3E0] text-[#B4570B]">
+                                      已回覆 {existingReply.at}
+                                    </span>
+                                  )}
+                                </div>
+
+                                {answerText ? (
+                                  <p className="text-xs font-semibold text-slate-700 leading-relaxed bg-[#FAF8F5] border border-slate-100 rounded-xl p-3 whitespace-pre-wrap">
+                                    {answerText}
+                                  </p>
+                                ) : (
+                                  <p className="text-xs font-bold text-slate-300 bg-[#FAF8F5] border border-dashed border-slate-200 rounded-xl p-3">
+                                    尚未作答
+                                  </p>
+                                )}
+
+                                <div className="space-y-2">
+                                  <textarea
+                                    rows={2}
+                                    value={draft}
+                                    onChange={(e) =>
+                                      setReplyDrafts(prev => ({ ...prev, [sub.studentId]: e.target.value }))
+                                    }
+                                    placeholder={`回覆 ${sub.studentName} 這一題...`}
+                                    className="w-full text-xs p-3 rounded-xl border border-gray-200 outline-none focus:border-[#E65100] bg-white leading-relaxed font-semibold"
+                                  />
+                                  <div className="flex justify-end gap-2">
+                                    {existingReply && (
+                                      <button
+                                        onClick={() => {
+                                          setReplyDrafts(prev => ({ ...prev, [sub.studentId]: '' }));
+                                          handleSaveReply(sub.studentId, selectedQuestion.id, '');
+                                        }}
+                                        className="px-3 py-1.5 text-[10px] font-black rounded-xl border border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-200 transition-all cursor-pointer"
+                                      >
+                                        移除回覆
+                                      </button>
+                                    )}
+                                    <button
+                                      disabled={!isDirty || !draft.trim()}
+                                      onClick={() => handleSaveReply(sub.studentId, selectedQuestion.id, draft)}
+                                      className="px-4 py-1.5 bg-[#E65100] hover:bg-[#D84315] text-white font-black text-[10px] rounded-xl shadow-xs transition-all flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                                    >
+                                      <Send className="w-3 h-3" />
+                                      {existingReply ? '更新回覆' : '送出回覆'}
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </>
+                      ) : (
+                        <div className="bg-white border border-slate-100 rounded-2xl p-8 text-center text-xs font-bold text-slate-400">
+                          這個單元目前還沒有可以批改的題目。
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* 學生：老師針對各題寫的回覆 */}
+                {role === 'student' && myRepliedQuestions.length > 0 && (
+                  <div className="bg-white border border-[#F5E6D8] rounded-2xl p-5 space-y-3 shadow-3xs">
+                    <h4 className="text-xs font-black text-[#5C4538] flex items-center gap-1.5 border-b border-amber-100 pb-2.5">
+                      <span>👩🏻‍🏫</span>
+                      老師的逐題回覆（{myRepliedQuestions.length} 題）
+                    </h4>
+                    {myRepliedQuestions.map(q => {
+                      const reply = currentUnitWorksheet.replies![q.id];
+                      const myAnswer = formatAnswerValue(q, currentUnitWorksheet.answers?.[q.id]);
+                      return (
+                        <div key={q.id} className="space-y-2 border border-slate-100 rounded-xl p-3.5">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="px-2 py-0.5 bg-[#FDE2D1] text-[#A84A30] rounded-md text-[10px] font-black font-mono">
+                              {q.code}
+                            </span>
+                            <span className="text-[11px] font-black text-slate-700">{q.title}</span>
+                          </div>
+                          {myAnswer && (
+                            <p className="text-[11px] font-semibold text-slate-500 leading-relaxed bg-[#FAF8F5] border border-slate-100 rounded-lg p-2.5 whitespace-pre-wrap">
+                              我的作答：{myAnswer}
+                            </p>
+                          )}
+                          <p className="text-xs font-bold text-[#5C4538] leading-relaxed bg-[#FFF8F3] border border-[#F5E6D8] rounded-lg p-3 whitespace-pre-wrap">
+                            {reply.text}
+                          </p>
+                          <span className="text-[9px] font-bold text-[#A38E80] block">
+                            {reply.by}．{reply.at}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Show Student Answers Review Box for Teacher or summary check */}
+                {role === 'teacher' && gradingMode === 'summary' && (
                   <div className="bg-white border border-slate-100 rounded-2xl p-4.5 space-y-2.5">
                     <h4 className="text-xs font-black text-slate-800">📌 學生隨堂填答快速瀏覽</h4>
                     <p className="text-[11px] text-gray-500 font-medium">
@@ -522,7 +832,7 @@ export default function UnitStudyView({
                 )}
 
                 {/* Display Current Teacher Feedback */}
-                {currentUnitWorksheet.feedback ? (
+                {showSummaryBlocks && currentUnitWorksheet.feedback ? (
                   <div className="bg-gradient-to-br from-amber-50/70 via-orange-50/20 to-white border border-amber-200 rounded-2xl p-5 space-y-4 shadow-3xs">
                     <div className="flex justify-between items-center border-b border-amber-200/30 pb-3">
                       <div className="flex items-center gap-2.5">
@@ -557,7 +867,7 @@ export default function UnitStudyView({
                     )}
                   </div>
                 ) : (
-                  role === 'student' && (
+                  role === 'student' && myRepliedQuestions.length === 0 && (
                     <div className="bg-white border border-slate-100 p-8 rounded-2xl text-center space-y-3 shadow-3xs">
                       <span className="text-4xl block">⏳</span>
                       <h4 className="text-sm font-black text-slate-800">林老師正在批改中</h4>
@@ -569,7 +879,7 @@ export default function UnitStudyView({
                 )}
 
                 {/* Teacher Feedback input and editing controls */}
-                {role === 'teacher' && (
+                {role === 'teacher' && gradingMode === 'summary' && (
                   <div className="bg-white rounded-2xl border border-slate-200/80 p-5 space-y-4 shadow-3xs">
                     <h3 className="text-xs font-black text-slate-800 flex items-center gap-1.5 border-b border-slate-100 pb-2.5">
                       <UserCheck className="w-4.5 h-4.5 text-blue-600" />

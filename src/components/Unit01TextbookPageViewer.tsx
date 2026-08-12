@@ -9,6 +9,7 @@ import charXiaowenImg from '../assets/images/characters/char_xiaowen.jpg';
 import charDadImg from '../assets/images/characters/char_dad.jpg';
 import charBojunImg from '../assets/images/characters/char_bojun.jpg';
 import { TextbookReaderLayout, PageNavItem } from './TextbookReaderLayout';
+import { QuestionReply } from '../types';
 
 interface Unit01TextbookPageViewerProps {
   key?: string;
@@ -19,6 +20,8 @@ interface Unit01TextbookPageViewerProps {
   currentPage?: number;
   onPageChange?: (page: number) => void;
   onFinishUnit?: () => void;
+  /** 老師的逐題回覆，key 是 questionId */
+  replies?: Record<string, QuestionReply>;
 }
 
 export const CHAPTERS_NAV_UNIT_01: PageNavItem[] = [
@@ -53,7 +56,8 @@ export default function Unit01TextbookPageViewer({
   isSubmitted,
   currentPage: controlledPage,
   onPageChange,
-  onFinishUnit
+  onFinishUnit,
+  replies
 }: Unit01TextbookPageViewerProps) {
   const [localPage, setLocalPage] = useState<number>(14);
   const currentPage = controlledPage !== undefined ? controlledPage : localPage;
@@ -85,6 +89,9 @@ export default function Unit01TextbookPageViewer({
   };
 
   const isDisabled = role === 'teacher' || isSubmitted;
+
+  // 這一頁的題目 id（老師的逐題回覆就掛在這個 key 上）
+  const activeQuestionId = `p${String(currentPage).padStart(2, '0')}_reflection`;
 
   // Page-specific contents
   let leftContent: React.ReactNode = null;
@@ -183,6 +190,7 @@ export default function Unit01TextbookPageViewer({
       rightAnswerPlaceholder="在此寫下你的思辨想法..."
       rightMaxLength={500}
       rightTips={rightTips}
+      teacherReply={replies?.[activeQuestionId]}
       suggestedTime="15 – 20 分鐘"
       tipText="點擊側邊選單可快速切換章節，請完成思考問題後點擊儲存。"
       userName="王小文"

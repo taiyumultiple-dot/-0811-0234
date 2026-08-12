@@ -26,6 +26,13 @@ export interface Feedback {
   score?: number; // 1-100
 }
 
+/** 老師針對「某一題」的回覆。整單元總評用 Feedback，這個是逐題的。 */
+export interface QuestionReply {
+  text: string;
+  by: string;   // 老師名字
+  at: string;   // 'YYYY-MM-DD HH:mm'
+}
+
 export interface QuestFeedback {
   comments: string;
   gradedBy: string;
@@ -127,7 +134,8 @@ export interface StudentSubmission {
     answers: Record<string, any>;
     submitted: boolean;
     submittedAt?: string;
-    feedback?: Feedback;
+    feedback?: Feedback;              // 整單元的總評
+    replies?: Record<string, QuestionReply>; // 逐題回覆，key 是 questionId
     readingProgress?: number;
   }>;
   games?: Record<string, {

@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import { StudentSubmission, UserProfile } from '../types';
 import CollapsibleSection from './CollapsibleSection';
+import ClassOverviewPanel from './ClassOverviewPanel';
 
 interface LearningRecordTabProps {
   submissions: StudentSubmission[];
@@ -47,9 +48,33 @@ interface LearningRecordTabProps {
   activeStudentName?: string;
   onNavigate?: (tab: string) => void;
   onSelectUnit?: (unitId: string) => void;
+  /** 老師版全班總覽要列出所有學生 */
+  registeredUsers?: UserProfile[];
+  /** 老師版：點某個學生的某個單元 → 直接進批改畫面 */
+  onOpenGrading?: (studentId: string, unitId: string) => void;
 }
 
-export default function LearningRecordTab({
+/**
+ * 「學習紀錄」依身分分岔：
+ *   老師 → 全班同步狀況總覽
+ *   學生 → 原本的個人學習紀錄（下方 StudentLearningRecordPanel，內容未更動）
+ */
+export default function LearningRecordTab(props: LearningRecordTabProps) {
+  if (props.currentUser?.role === 'teacher') {
+    return (
+      <ClassOverviewPanel
+        submissions={props.submissions}
+        registeredUsers={props.registeredUsers}
+        currentUser={props.currentUser}
+        onOpenGrading={props.onOpenGrading}
+      />
+    );
+  }
+
+  return <StudentLearningRecordPanel {...props} />;
+}
+
+function StudentLearningRecordPanel({
   submissions,
   onChangeSubmissions,
   onSaveQuest,
@@ -407,7 +432,7 @@ export default function LearningRecordTab({
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="w-full space-y-6">
 
         {/* ========================================================= */}
         {/* HEADER TITLE BAR (Style matching Image 2)                  */}
@@ -623,12 +648,12 @@ export default function LearningRecordTab({
                       if (onSelectUnit) onSelectUnit(item.unitId);
                       if (onNavigate) onNavigate('課本單元');
                     }}
-                    className="bg-[#FCFAF6] hover:bg-[#122442] border border-[#F1E0CE] hover:border-[#E65100] rounded-xl p-3 flex flex-col items-center justify-center space-y-1.5 text-center cursor-pointer transition-all group"
+                    className="bg-[#FCFAF6] hover:bg-[#FFF3E0] border border-[#F1E0CE] hover:border-[#E65100] rounded-xl p-3 flex flex-col items-center justify-center space-y-1.5 text-center cursor-pointer transition-all group"
                   >
                     <div className={`w-14 h-14 rounded-full border-4 ${item.bg} flex items-center justify-center text-sm font-black ${item.color} group-hover:scale-105 transition-all`}>
                       {item.percent}%
                     </div>
-                    <span className="text-[11px] font-bold text-slate-200 line-clamp-1">{item.unit}</span>
+                    <span className="text-[11px] font-bold text-[#5D4037] line-clamp-1">{item.unit}</span>
                   </div>
                 ))}
               </div>

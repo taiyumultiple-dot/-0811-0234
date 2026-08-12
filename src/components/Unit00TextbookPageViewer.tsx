@@ -9,6 +9,7 @@ import charXiaowenImg from '../assets/images/characters/char_xiaowen.jpg';
 import charDadImg from '../assets/images/characters/char_dad.jpg';
 import { UNIT00_TEXTBOOK_PAGES } from '../textbookData';
 import { TextbookReaderLayout, PageNavItem } from './TextbookReaderLayout';
+import { QuestionReply } from '../types';
 
 interface Unit00TextbookPageViewerProps {
   key?: string;
@@ -19,6 +20,8 @@ interface Unit00TextbookPageViewerProps {
   currentPage?: number;
   onPageChange?: (page: number) => void;
   onFinishUnit?: () => void;
+  /** 老師的逐題回覆，key 是 questionId */
+  replies?: Record<string, QuestionReply>;
 }
 
 export const CHAPTERS_NAV: PageNavItem[] = UNIT00_TEXTBOOK_PAGES.map(p => ({
@@ -29,7 +32,7 @@ export const CHAPTERS_NAV: PageNavItem[] = UNIT00_TEXTBOOK_PAGES.map(p => ({
   emoji: p.emoji
 }));
 
-const P05_CONDITIONS = [
+export const P05_CONDITIONS = [
   { id: "1", text: "理性思考" },
   { id: "2", text: "認識自己" },
   { id: "3", text: "有道德感" },
@@ -59,7 +62,8 @@ export default function Unit00TextbookPageViewer({
   isSubmitted,
   currentPage: controlledPage,
   onPageChange,
-  onFinishUnit
+  onFinishUnit,
+  replies
 }: Unit00TextbookPageViewerProps) {
   const [localPage, setLocalPage] = useState<number>(4);
   const currentPage = controlledPage !== undefined ? controlledPage : localPage;
@@ -101,6 +105,8 @@ export default function Unit00TextbookPageViewer({
   let rightTips: Array<{ tipId: string; text: string; icon?: string }> = [];
   let customRightContent: React.ReactNode = undefined;
   let heroImage = charDadImg;
+  // 這一頁的題目 id（老師的逐題回覆就掛在這個 key 上）
+  let activeQuestionId = `p${String(currentPage).padStart(2, '0')}_notes`;
 
   if (currentPage === 4) {
     heroImage = charDadImg;
@@ -123,6 +129,7 @@ export default function Unit00TextbookPageViewer({
         </p>
       </div>
     );
+    activeQuestionId = 'p04_story_reflection';
     rightQuestionBadge = "思考問題";
     rightQuestionText = "你是否也曾像可華一樣，對「好好讀書➔考上大學➔找到工作➔幸福人生」這條世俗規則的公式產生過懷疑？如果是你，你會怎麼回答可華的問題？";
     rightAnswerValue = answers.p04_story_reflection || '';
@@ -133,6 +140,7 @@ export default function Unit00TextbookPageViewer({
       { tipId: "TIP 03", text: "如果沒有目標的核心價值，成功後是否依然空虛？", icon: "🚀" }
     ];
   } else if (currentPage === 5) {
+    activeQuestionId = 'p05_conditions';
     heroImage = charKehuaImg;
     leftContent = (
       <div className="space-y-4 text-slate-700 leading-relaxed font-medium">
@@ -240,6 +248,7 @@ export default function Unit00TextbookPageViewer({
       rightMaxLength={500}
       rightTips={rightTips}
       customRightContent={customRightContent}
+      teacherReply={replies?.[activeQuestionId]}
       suggestedTime="15 – 20 分鐘"
       tipText="可依閱讀與思考，點擊側邊章節可快速切換或再次閱讀。填寫後記得儲存。"
       userName="王小文"

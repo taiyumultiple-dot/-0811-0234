@@ -21,7 +21,10 @@ import {
   UserPlus,
   BookOpen,
   Beaker,
-  Bell
+  Bell,
+  Wrench,
+  Menu,
+  X
 } from 'lucide-react';
 
 import { Character, StudentSubmission, UserProfile } from './types';
@@ -36,6 +39,7 @@ import InteractiveQuestTab from './components/InteractiveQuestTab';
 import HumanologySelfIdentityQuizPage from './components/HumanologySelfIdentityQuizPage';
 import LearningRecordTab from './components/LearningRecordTab';
 import LatestNewsTab from './components/LatestNewsTab';
+import ToolboxTab from './components/ToolboxTab';
 import GlobalHeaderBanner from './components/GlobalHeaderBanner';
 import { ACHIEVEMENTS } from './achievements';
 import AuthScreen from './components/AuthScreen';
@@ -117,6 +121,8 @@ export default function App() {
   // 登入不再分學生／教師，身分由帳號本身決定，所以只剩「登入」與「註冊」兩種
   const [authModalTab, setAuthModalTab] = useState<'login' | 'register'>('login');
   const [showTour, setShowTour] = useState(false);
+  // 手機版的「更多」抽屜
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   // Fetch initial state from server on mount
   useEffect(() => {
@@ -327,6 +333,16 @@ export default function App() {
   const role = currentUser?.role || 'student';
   const [activeStudentId, setActiveStudentId] = useState<string>('stud_kehua');
 
+  // 老師從「學習紀錄」全班總覽點某一格 → 直接落在那份學習單的批改畫面
+  const [gradingJump, setGradingJump] = useState<{ studentId: string; unitId: string } | null>(null);
+
+  const handleOpenGrading = (studentId: string, unitId: string) => {
+    setActiveStudentId(studentId);
+    setSelectedUnitId(unitId);
+    setGradingJump({ studentId, unitId });
+    setActiveTab('課本單元');
+  };
+
   // When current user changes, automatically align activeStudentId
   useEffect(() => {
     if (currentUser) {
@@ -446,16 +462,27 @@ export default function App() {
     }));
   };
 
+  const isTeacher = currentUser?.role === 'teacher';
+
   const navItems = [
     { name: '首頁', icon: Home, badge: null },
     { name: '課本單元', icon: Map, badge: null },
     { name: '人物介紹', icon: Users, badge: null },
     { name: '學習紀錄', icon: FileText, badge: null },
+    // 工具箱夾在「學習紀錄」與「最新消息」中間，只有老師看得到
+    ...(isTeacher ? [{ name: '工具箱', icon: Wrench, badge: null }] : []),
     { name: '最新消息', icon: Bell, badge: null },
-    ...(currentUser?.role === 'teacher' ? [{ name: '學習統計', icon: TrendingUp, badge: null }] : [])
+    ...(isTeacher ? [{ name: '學習統計', icon: TrendingUp, badge: null }] : [])
   ];
 
+  // 手機底部列只放三個最常用的，其餘收進「更多」抽屜——
+  // 老師登入後有七個分頁，全部塞進底部列會擠成一團。
+  const mobilePrimary = navItems.filter(i => ['首頁', '課本單元', '學習紀錄'].includes(i.name));
+
   const handleTabSelection = (tabName: string, extra?: any) => {
+    // 從導覽列自己點的，就不要再被上一次的「跳去批改」帶走
+    setGradingJump(null);
+
     if (tabName === 'show_tour') {
       setShowTour(true);
       return;
@@ -468,7 +495,8 @@ export default function App() {
       }, 100);
       return;
     }
-    if (!currentUser && ['課本單元', '課程地圖', '學習統計', '學習紀錄'].includes(tabName)) {
+    setShowMobileMenu(false);
+    if (!currentUser && ['課本單元', '課程地圖', '學習統計', '學習紀錄', '工具箱'].includes(tabName)) {
       setAuthModalTab('login');
       setShowAuthModal(true);
       return;
@@ -487,18 +515,18 @@ export default function App() {
       {/* ========================================================= */}
       {(
         <header className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-2xs">
-          <div className="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
-            
+          <div className="w-full px-3 sm:px-4 lg:px-8 h-14 lg:h-16 flex items-center justify-between gap-2">
+
             {/* Brand Logo & Title */}
-            <div className="flex items-center gap-2.5 cursor-pointer select-none" onClick={() => handleTabSelection('首頁')}>
-              <svg className="w-8 h-8 shrink-0" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div className="flex items-center gap-2 sm:gap-2.5 cursor-pointer select-none min-w-0" onClick={() => handleTabSelection('首頁')}>
+              <svg className="w-7 h-7 lg:w-8 lg:h-8 shrink-0" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M50 3C50 3 53 38 62 47C71 56 97 50 97 50C97 50 71 56 62 62 53 68 50 97 50 97 50 97 47 68 38 62 29 56 3 50 3 50 3 50 29 56 38 47 47 38 50 3 50 3Z" fill="#E0812A"/>
               </svg>
-              <div>
-                <h1 className="text-lg font-extrabold text-[#4A321F] tracking-tight leading-none mb-0.5">
+              <div className="min-w-0">
+                <h1 className="text-sm sm:text-base lg:text-lg font-extrabold text-[#4A321F] tracking-tight leading-none mb-0.5 truncate">
                   泰宇生命教育互動學習平台
                 </h1>
-                <span className="text-[10px] font-bold text-[#B08A66] block tracking-wider font-mono">
+                <span className="text-[10px] font-bold text-[#B08A66] hidden sm:block tracking-wider font-mono">
                   Life Education Platform
                 </span>
               </div>
@@ -526,19 +554,19 @@ export default function App() {
             </nav>
 
             {/* Right Section: Search & User Profile */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 lg:gap-4">
 
               {/* Search Icon */}
               <button
                 title="搜尋"
-                className="p-2 rounded-full text-slate-400 hover:text-[#E0812A] hover:bg-orange-50 transition-all cursor-pointer"
+                className="hidden lg:block p-2 rounded-full text-slate-400 hover:text-[#E0812A] hover:bg-orange-50 transition-all cursor-pointer"
               >
                 <Search className="w-4.5 h-4.5" />
               </button>
-              
+
               {/* Teacher's Student Workspace Selector Dropdown */}
               {currentUser?.role === 'teacher' && (
-                <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-full p-0.5 px-3">
+                <div className="hidden lg:flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-full p-0.5 px-3">
                   <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">
                     評閱學生空間:
                   </span>
@@ -560,10 +588,10 @@ export default function App() {
               <button
                 onClick={() => setShowTour(true)}
                 title="查看平台功能導覽"
-                className="flex items-center gap-1.5 px-3 py-1.5 border border-orange-200 hover:bg-orange-50 text-[#B4570B] rounded-full text-xs font-bold transition-all cursor-pointer bg-[#FFFBF5]"
+                className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 border border-orange-200 hover:bg-orange-50 text-[#B4570B] rounded-full text-xs font-bold transition-all cursor-pointer bg-[#FFFBF5]"
               >
                 <HelpCircle className="w-4 h-4 text-[#E0812A]" />
-                <span className="hidden sm:inline">平台導覽</span>
+                <span>平台導覽</span>
               </button>
 
               {/* Active User Profile Button or Login Button */}
@@ -573,14 +601,15 @@ export default function App() {
                     setAuthModalTab('login');
                     setShowAuthModal(true);
                   }}
-                  className="px-5 py-2 bg-[#E65100] hover:bg-[#D84315] text-white rounded-full text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 lg:px-5 py-1.5 lg:py-2 bg-[#E65100] hover:bg-[#D84315] text-white rounded-full text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer shrink-0"
                 >
                   <span>🔑</span>
-                  <span>登入系統</span>
+                  <span className="hidden sm:inline">登入系統</span>
+                  <span className="sm:hidden">登入</span>
                 </button>
               ) : (
-                <div 
-                  className="flex items-center gap-2 bg-[#E0812A] hover:bg-[#C46B1E] text-white px-5 py-2 rounded-full text-xs font-bold shadow-sm transition-all"
+                <div
+                  className="flex items-center gap-2 bg-[#E0812A] text-white px-2.5 lg:px-5 py-1.5 lg:py-2 rounded-full text-xs font-bold shadow-sm shrink-0"
                 >
                   <SafeImageAvatar
                     src={currentUser.avatarUrl}
@@ -589,20 +618,29 @@ export default function App() {
                     sizeClassName="w-5 h-5"
                     className="border border-white/40 bg-white"
                   />
-                  <span>{currentUser.name} {currentUser.role === 'student' ? '已登入' : '教師端'}</span>
+                  <span className="hidden sm:inline">{currentUser.name} {currentUser.role === 'student' ? '已登入' : '教師端'}</span>
                 </div>
               )}
 
               {/* Logout button */}
               {currentUser && (
-                <button 
+                <button
                   onClick={handleLogout}
                   title="登出帳號"
-                  className="p-2 rounded-full border border-gray-100 hover:bg-red-50 text-slate-400 hover:text-red-500 transition-all cursor-pointer"
+                  className="hidden lg:block p-2 rounded-full border border-gray-100 hover:bg-red-50 text-slate-400 hover:text-red-500 transition-all cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                 </button>
               )}
+
+              {/* 手機版：打開「更多」抽屜 */}
+              <button
+                onClick={() => setShowMobileMenu(true)}
+                title="更多功能"
+                className="lg:hidden p-2 rounded-xl border border-orange-200 bg-[#FFFBF5] text-[#B4570B] transition-all cursor-pointer shrink-0"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
 
             </div>
           </div>
@@ -612,7 +650,7 @@ export default function App() {
       {/* ========================================================= */}
       {/* 2. MAIN WORKSPACE CONTAINER                              */}
       {/* ========================================================= */}
-      <main className="max-w-7xl w-full mx-auto p-4 lg:p-6 pb-24 lg:pb-6 flex-1">
+      <main className="w-full p-4 lg:px-8 lg:py-6 pb-24 lg:pb-8 flex-1">
         {/* 首頁專屬的角色橫幅。頁首已經全站共用，這裡只放橫幅 */}
         {activeTab === '首頁' && (
           <GlobalHeaderBanner onNavigate={handleTabSelection} />
@@ -660,6 +698,8 @@ export default function App() {
                 onChangeSubmissions={setSubmissions}
                 activeStudentId={activeStudentId}
                 role={role}
+                autoOpenGrading={!!gradingJump}
+                teacherName={currentUser?.name || '林老師'}
               />
             )}
 
@@ -711,11 +751,21 @@ export default function App() {
                 activeStudentName={currentStudent?.studentName || currentUser?.name || '陳可華'}
                 onNavigate={handleTabSelection}
                 onSelectUnit={setSelectedUnitId}
+                registeredUsers={registeredUsers}
+                onOpenGrading={handleOpenGrading}
               />
             )}
 
             {activeTab === '最新消息' && (
               <LatestNewsTab />
+            )}
+
+            {activeTab === '工具箱' && currentUser?.role === 'teacher' && (
+              <ToolboxTab
+                submissions={submissions}
+                registeredUsers={registeredUsers}
+                currentUser={currentUser}
+              />
             )}
 
             {activeTab === '學習統計' && currentUser?.role === 'teacher' && (
@@ -730,16 +780,16 @@ export default function App() {
       {/* ========================================================= */}
       {/* 3. MOBILE BOTTOM NAVIGATION                               */}
       {/* ========================================================= */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-100 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] px-2 py-1.5 flex justify-around items-center">
-        {navItems.map((item) => {
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-100 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] px-2 py-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom))] flex justify-around items-center">
+        {mobilePrimary.map((item) => {
           const isActive = activeTab === item.name;
           return (
             <button
               key={item.name}
-              onClick={() => setActiveTab(item.name)}
+              onClick={() => handleTabSelection(item.name)}
               className={`flex flex-col items-center justify-center gap-1 py-1 px-3 rounded-xl transition-all ${
-                isActive 
-                  ? 'text-[#E0812A] scale-105' 
+                isActive
+                  ? 'text-[#E0812A] scale-105'
                   : 'text-slate-400 hover:text-slate-600'
               }`}
             >
@@ -748,7 +798,138 @@ export default function App() {
             </button>
           );
         })}
+
+        {/* 其餘分頁收在這裡 */}
+        <button
+          onClick={() => setShowMobileMenu(true)}
+          className={`flex flex-col items-center justify-center gap-1 py-1 px-3 rounded-xl transition-all ${
+            navItems.some(i => i.name === activeTab && !mobilePrimary.includes(i))
+              ? 'text-[#E0812A] scale-105'
+              : 'text-slate-400'
+          }`}
+        >
+          <Menu className="w-5 h-5" />
+          <span className="text-[10px] font-extrabold tracking-tight">更多</span>
+        </button>
       </div>
+
+      {/* ========================================================= */}
+      {/* 手機版「更多」抽屜：所有分頁 ＋ 導覽／登入登出／評閱學生     */}
+      {/* ========================================================= */}
+      <AnimatePresence>
+        {showMobileMenu && (
+          <div className="lg:hidden fixed inset-0 z-[60] flex flex-col justify-end">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowMobileMenu(false)}
+              className="absolute inset-0 bg-slate-900/50 backdrop-blur-xs"
+            />
+
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 320 }}
+              className="relative bg-[#FAF6F0] rounded-t-3xl border-t border-[#EAD5C3] p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] space-y-4 max-h-[85vh] overflow-y-auto"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {currentUser && (
+                    <SafeImageAvatar
+                      src={currentUser.avatarUrl}
+                      alt={currentUser.name}
+                      fallbackEmoji={currentUser.avatarEmoji || '👤'}
+                      sizeClassName="w-8 h-8"
+                      className="border border-[#EAD5C3] bg-white"
+                    />
+                  )}
+                  <div>
+                    <span className="text-sm font-black text-[#3E2723] block leading-tight">
+                      {currentUser ? currentUser.name : '訪客'}
+                    </span>
+                    <span className="text-[10px] font-bold text-[#8D6E63]">
+                      {currentUser ? (currentUser.role === 'teacher' ? '教師端' : '學生') : '尚未登入'}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowMobileMenu(false)}
+                  className="p-2 rounded-xl border border-[#EAD5C3] bg-white text-[#8D6E63] cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* 全部分頁 */}
+              <div className="grid grid-cols-2 gap-2.5">
+                {navItems.map(item => {
+                  const isActive = activeTab === item.name;
+                  return (
+                    <button
+                      key={item.name}
+                      onClick={() => handleTabSelection(item.name)}
+                      className={`flex items-center gap-2.5 p-3.5 rounded-2xl border text-left transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-[#FFF3E0] border-[#F5C99B] text-[#B4570B]'
+                          : 'bg-white border-[#EAD5C3] text-[#5D4037]'
+                      }`}
+                    >
+                      <item.icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-[#E65100]' : 'text-[#B08A66]'}`} />
+                      <span className="text-xs font-black truncate">{item.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* 老師：評閱學生空間 */}
+              {currentUser?.role === 'teacher' && (
+                <div className="bg-white border border-[#EAD5C3] rounded-2xl p-3.5 space-y-1.5">
+                  <span className="text-[10px] font-black text-[#8D6E63] block">評閱學生空間</span>
+                  <select
+                    value={activeStudentId}
+                    onChange={(e) => setActiveStudentId(e.target.value)}
+                    className="w-full bg-[#FCFAF6] border border-[#EAD5C3] rounded-xl px-3 py-2 text-xs font-black text-[#3E2723] outline-none focus:border-[#E65100]"
+                  >
+                    {submissions.map((s) => (
+                      <option key={s.studentId} value={s.studentId}>{s.studentName}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* 其他動作 */}
+              <div className="grid grid-cols-2 gap-2.5">
+                <button
+                  onClick={() => { setShowMobileMenu(false); setShowTour(true); }}
+                  className="flex items-center justify-center gap-1.5 py-3 rounded-2xl border border-[#F5C99B] bg-[#FFFBF5] text-[#B4570B] text-xs font-black cursor-pointer"
+                >
+                  <HelpCircle className="w-4 h-4" />
+                  平台導覽
+                </button>
+
+                {currentUser ? (
+                  <button
+                    onClick={() => { setShowMobileMenu(false); handleLogout(); }}
+                    className="flex items-center justify-center gap-1.5 py-3 rounded-2xl border border-rose-200 bg-white text-rose-500 text-xs font-black cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    登出
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => { setShowMobileMenu(false); setAuthModalTab('login'); setShowAuthModal(true); }}
+                    className="flex items-center justify-center gap-1.5 py-3 rounded-2xl bg-[#E65100] text-white text-xs font-black cursor-pointer"
+                  >
+                    🔑 登入系統
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
 
 

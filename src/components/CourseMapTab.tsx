@@ -40,6 +40,9 @@ interface CourseMapTabProps {
   onChangeSubmissions: (subs: StudentSubmission[]) => void;
   activeStudentId: string;
   role: 'student' | 'teacher';
+  /** 老師從全班總覽點進來：直接開課本檢視並停在批改分頁 */
+  autoOpenGrading?: boolean;
+  teacherName?: string;
 }
 
 interface UnitDetailConfig {
@@ -465,14 +468,16 @@ export default function CourseMapTab({
   submissions,
   onChangeSubmissions,
   activeStudentId,
-  role
+  role,
+  autoOpenGrading = false,
+  teacherName
 }: CourseMapTabProps) {
 
   // Current active unit key
   const [activeUnitKey, setActiveUnitKey] = useState<string>(selectedUnitId || 'unit_00');
   
   // Textbook Reader View Mode
-  const [isReadingTextbook, setIsReadingTextbook] = useState<boolean>(false);
+  const [isReadingTextbook, setIsReadingTextbook] = useState<boolean>(autoOpenGrading);
 
   // Bookmarked units state
   const [bookmarkedUnits, setBookmarkedUnits] = useState<Record<string, boolean>>({
@@ -592,6 +597,8 @@ export default function CourseMapTab({
         onChangeSubmissions={onChangeSubmissions}
         activeStudentId={activeStudentId}
         role={role}
+        initialTab={autoOpenGrading ? 'feedback' : 'textbook'}
+        teacherName={teacherName}
       />
     );
   }

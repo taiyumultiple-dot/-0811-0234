@@ -63,7 +63,10 @@ export interface TextbookReaderLayoutProps {
   rightMaxLength?: number;
   rightTips?: TipItem[];
   customRightContent?: React.ReactNode; // For matching / interactive widgets
-  
+
+  // 老師針對「這一題」寫的回覆（沒有就不顯示）
+  teacherReply?: { text: string; by: string; at: string };
+
   // Bottom Bar Info
   suggestedTime?: string; // e.g. "15 - 20 分鐘"
   tipText?: string;
@@ -101,6 +104,7 @@ export function TextbookReaderLayout({
   rightMaxLength = 500,
   rightTips = [],
   customRightContent,
+  teacherReply,
   suggestedTime = "15 – 20 分鐘",
   tipText = "可依閱讀與思考，點擊側邊章節可快速切換或再次閱讀。填寫後記得儲存。",
   userName = "王小文",
@@ -108,6 +112,22 @@ export function TextbookReaderLayout({
   isDisabled = false
 }: TextbookReaderLayoutProps) {
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+
+  // 老師針對這一題的回覆。答案框（或互動題）的正下方，沒有就整塊不出現。
+  const replyCard = teacherReply && teacherReply.text ? (
+    <div className="bg-[#FFF8F3] border border-[#F5D9C4] rounded-2xl p-5 space-y-2.5 shadow-3xs">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#FDE2D1] text-[#A84A30] rounded-md text-xs sm:text-sm font-black">
+          <span>👩🏻‍🏫</span>
+          <span>{teacherReply.by} 對這一題的回覆</span>
+        </div>
+        <span className="text-xs font-bold text-[#B08A66] font-mono">{teacherReply.at}</span>
+      </div>
+      <p className="text-sm sm:text-base font-bold text-[#5C4538] leading-relaxed bg-white/70 border border-[#F5E6D8] rounded-xl p-4 whitespace-pre-wrap">
+        {teacherReply.text}
+      </p>
+    </div>
+  ) : null;
 
   const currentPageIndex = pagesNav.findIndex(p => p.page === currentPage);
   const prevPageObj = currentPageIndex > 0 ? pagesNav[currentPageIndex - 1] : null;
@@ -274,7 +294,10 @@ export function TextbookReaderLayout({
 
                 {/* Custom Right Content OR standard question textarea */}
                 {customRightContent ? (
-                  customRightContent
+                  <>
+                    {customRightContent}
+                    {replyCard}
+                  </>
                 ) : (
                   <>
                     {/* Main Question Callout Card */}
@@ -301,6 +324,8 @@ export function TextbookReaderLayout({
                         </div>
                       </div>
                     </div>
+
+                    {replyCard}
 
                     {/* Bottom Tips Section */}
                     {rightTips && rightTips.length > 0 && (

@@ -286,7 +286,7 @@ export default function HomeTab({
         <circle cx="72" cy="110" r="6.5" fill="#F4BCA3" />
       </svg>
 
-      <div className="max-w-7xl mx-auto space-y-6 relative z-10 pt-4">
+      <div className="w-full space-y-6 relative z-10 pt-4">
 
 
 

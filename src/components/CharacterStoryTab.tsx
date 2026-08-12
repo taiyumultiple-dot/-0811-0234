@@ -140,7 +140,7 @@ export default function CharacterStoryTab({ characters: propCharacters }: Charac
         </svg>
       </div>
 
-      <div className="max-w-7xl mx-auto space-y-6 relative z-10">
+      <div className="w-full space-y-6 relative z-10">
 
         {/* Hero banner */}
         <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#FFF4EA] via-[#FFFBF6] to-[#FFF0E0] border-2 border-[#EAD5C3] p-6 md:p-8 flex items-center justify-between gap-6 shadow-sm">

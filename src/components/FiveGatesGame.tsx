@@ -51,7 +51,8 @@ export default function FiveGatesGame({ onClose }: { onClose?: () => void }) {
           </div>
         )}
         <iframe
-          src={`${import.meta.env.BASE_URL}lifequest/index.html`}
+          // ?bgm=1：平台自己沒有背景音樂，所以請遊戲照常播它自己的
+          src={`${import.meta.env.BASE_URL}lifequest/index.html?bgm=1`}
           title="五門・心靈迷宮"
           className="w-full h-full border-0"
           allow="autoplay; fullscreen"

@@ -24,6 +24,7 @@ const areaStyle: Record<UpdateArea, string> = {
   人物介紹: 'bg-[#F3E5F5] text-[#6A1B9A] border-[#DCC0E2]',
   互動遊戲: 'bg-[#E3F2FD] text-[#1565C0] border-[#B3D6F2]',
   學習紀錄: 'bg-[#FCE4EC] text-[#AD1457] border-[#F0BBD0]',
+  工具箱: 'bg-[#FFF1E6] text-[#C2410C] border-[#F6C9A8]',
   最新消息: 'bg-[#EDE7F6] text-[#4527A0] border-[#C9BCE8]',
   登入: 'bg-[#E0F2F1] text-[#00695C] border-[#A8DAD5]'
 };

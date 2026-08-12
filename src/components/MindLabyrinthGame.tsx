@@ -131,7 +131,7 @@ export default function MindLabyrinthGame({
       {/* LOBBY VIEW (Generous spacing, Large legible text, All photos visible)     */}
       {/* ========================================================================= */}
       {gameState === 'lobby' && (
-        <div className="relative z-20 space-y-8 max-w-7xl mx-auto">
+        <div className="relative z-20 space-y-8 w-full">
           
           {/* Main Title Header */}
           <div className="text-left space-y-2">

@@ -9,6 +9,7 @@ import charXiaowenImg from '../assets/images/characters/char_xiaowen.jpg';
 import charXiaopingImg from '../assets/images/characters/char_xiaoping.jpg';
 import charBojunImg from '../assets/images/characters/char_bojun.jpg';
 import { TextbookReaderLayout, PageNavItem } from './TextbookReaderLayout';
+import { QuestionReply } from '../types';
 
 interface Unit04TextbookPageViewerProps {
   key?: string;
@@ -19,6 +20,8 @@ interface Unit04TextbookPageViewerProps {
   currentPage?: number;
   onPageChange?: (page: number) => void;
   onFinishUnit?: () => void;
+  /** 老師的逐題回覆，key 是 questionId */
+  replies?: Record<string, QuestionReply>;
 }
 
 export const CHAPTERS_NAV_UNIT_04: PageNavItem[] = [
@@ -49,7 +52,8 @@ export default function Unit04TextbookPageViewer({
   isSubmitted,
   currentPage: controlledPage,
   onPageChange,
-  onFinishUnit
+  onFinishUnit,
+  replies
 }: Unit04TextbookPageViewerProps) {
   const [localPage, setLocalPage] = useState<number>(72);
   const currentPage = controlledPage !== undefined ? controlledPage : localPage;
@@ -81,6 +85,9 @@ export default function Unit04TextbookPageViewer({
   };
 
   const isDisabled = role === 'teacher' || isSubmitted;
+
+  // 這一頁的題目 id（老師的逐題回覆就掛在這個 key 上）
+  const activeQuestionId = `p${String(currentPage).padStart(2, '0')}_reflection`;
 
   let leftContent: React.ReactNode = null;
   let rightQuestionBadge = "思考問題";
@@ -158,6 +165,7 @@ export default function Unit04TextbookPageViewer({
       rightAnswerPlaceholder="在此寫下你的倫理思辨觀點..."
       rightMaxLength={500}
       rightTips={rightTips}
+      teacherReply={replies?.[activeQuestionId]}
       suggestedTime="15 – 20 分鐘"
       tipText="可依閱讀與思考，點擊側邊章節可快速切換或再次閱讀。填寫後記得儲存。"
       userName="王小文"

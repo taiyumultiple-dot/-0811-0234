@@ -9,7 +9,7 @@ import { createClient } from "@supabase/supabase-js";
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 // Increase JSON limit to handle base64 image uploads comfortably
 app.use(express.json({ limit: "15mb" }));

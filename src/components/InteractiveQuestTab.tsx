@@ -1400,7 +1400,7 @@ export default function InteractiveQuestTab({
         )}
       </AnimatePresence>
 
-      <div className="max-w-7xl mx-auto pt-4 space-y-6 relative z-10">
+      <div className="w-full pt-4 space-y-6 relative z-10">
         
         {/* LOBBY VIEW */}
         {activeGameId === null ? (

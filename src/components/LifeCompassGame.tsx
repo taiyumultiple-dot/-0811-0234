@@ -601,7 +601,7 @@ export default function LifeCompassGame({
       {/* SECTION A: TOP HEADER BAR                                  */}
       {/* ========================================================= */}
       <div className="bg-[#FFFDF9] border-b-2 border-[#EAD5C3] sticky top-0 z-40 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between flex-wrap gap-3">
+        <div className="w-full px-4 lg:px-8 py-3.5 flex items-center justify-between flex-wrap gap-3">
           
           {/* Left Title & Icons */}
           <div className="flex items-center gap-3">
@@ -652,7 +652,7 @@ export default function LifeCompassGame({
 
       {/* Main Container */}
       {!isCompleted ? (
-        <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+        <div className="w-full px-4 lg:px-8 py-6 space-y-6">
 
           {/* ========================================================= */}
           {/* SECTION B & C & D: TOP DASHBOARD & SCENARIO CARD            */}
