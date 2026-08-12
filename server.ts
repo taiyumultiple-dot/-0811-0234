@@ -408,6 +408,116 @@ app.post("/api/grade-worksheet", async (req, res) => {
   }
 });
 
+/* ==========================================================================
+   星座・今日運勢與 AI 對話（《五門・心靈迷宮》的「心象 → 星座」用）
+   ---------------------------------------------------------------------------
+   遊戲是靜態網站，金鑰不能放前端，所以由這裡代打。
+   線上版（GitHub Pages）走的是同一份提示詞的 Supabase Edge Function，
+   兩邊的規則要一起改：supabase/functions/oracle-chat/index.ts
+   ========================================================================== */
+
+/** 兩種模式共用的角色設定。規則寫得很硬，因為對象是高中生。 */
+const ORACLE_SYSTEM = `你是《五門・心靈迷宮》裡的「星象」，陪高中生說話的角色。這是一款台灣的高中生命教育教材，說繁體中文。
+
+你的說話方式：
+・短。每次回覆 2 到 4 句，不要長篇大論，不要條列。
+・最後用一個問題收尾，把話題帶回對方自己身上。
+・用對方講的具體細節回應，不要講空泛的鼓勵。
+・語氣像一個比較年長、願意聽的朋友，不是老師也不是客服。
+
+絕對不要做的事：
+・不要預測未來，不要說「你會遇到貴人」「今天適合告白」這種算命句。星座只是開場白。
+・不要幫對方下人格標籤，不要說「你就是這種人」。
+・不要做心理或醫療診斷，不要建議用藥。
+・不要說教，不要在句尾加「加油」「要正向思考」這種話。
+
+遇到這些狀況要特別小心：
+・如果對方提到自我傷害、想死、被暴力對待、被性騷擾或霸凌——先好好接住那句話，
+  明確告訴他這件事需要真人幫忙，請他找信任的大人、學校輔導老師，
+  或撥打台灣的 1995（生命線）、1925（安心專線）、113（保護專線）。
+  這種時候不要問反思問題，也不要提星座。`;
+
+app.post("/api/oracle-chat", async (req, res) => {
+  const { mode, date, signName, traits, history, message } = req.body || {};
+
+  if (!ai) {
+    return res.status(400).json({
+      error: "API_KEY_MISSING",
+      message: "未偵測到 GEMINI_API_KEY，遊戲會自動改用離線版內容。"
+    });
+  }
+
+  try {
+    if (mode === "horoscope") {
+      const prompt = `今天是 ${date}。請為「${signName}」寫今天的一段話。
+
+這個星座在教材裡的設定：
+・別人常說：${traits?.said || ""}
+・另一面：${traits?.truth || ""}
+・成長課題：${traits?.lesson || ""}
+・容易卡住：${traits?.stuck || ""}
+
+要求：
+・不要預測會發生什麼事，改成「今天適合練習的一件事」。
+・headline 是一句 10 到 16 字的短句，像「今天適合把話講完整」。
+・body 兩到三句，扣著上面的設定寫，講得具體一點。
+・keywords 兩個詞，每個 2 到 3 字。
+・tip 一句話，是今天真的做得到的小動作。
+・全部用繁體中文，不要出現「運勢」「吉」「凶」「幸運色」這些字。`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt,
+        config: {
+          systemInstruction: ORACLE_SYSTEM,
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              headline: { type: Type.STRING, description: "10-16 字的短句" },
+              body: { type: Type.STRING, description: "兩到三句話" },
+              keywords: { type: Type.ARRAY, items: { type: Type.STRING }, description: "兩個 2-3 字的關鍵詞" },
+              tip: { type: Type.STRING, description: "今天做得到的一個小動作" }
+            },
+            required: ["headline", "body", "keywords", "tip"]
+          }
+        }
+      });
+
+      const text = response.text;
+      if (!text) throw new Error("Empty response from AI");
+      return res.json(JSON.parse(text.trim()));
+    }
+
+    // mode === "chat"
+    const contents = [
+      ...(history || []).map((m: any) => ({
+        role: m.role === "user" ? "user" : "model",
+        parts: [{ text: String(m.text || "") }]
+      })),
+      { role: "user", parts: [{ text: String(message || "") }] }
+    ];
+
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents,
+      config: {
+        systemInstruction:
+          ORACLE_SYSTEM +
+          `\n\n對方的星座是「${signName}」，今天是 ${date}。` +
+          `這個星座的設定：${traits?.truth || ""}／課題：${traits?.lesson || ""}。` +
+          `可以偶爾借用它當切入點，但不要每一句都提星座。`
+      }
+    });
+
+    return res.json({ text: response.text || "" });
+
+  } catch (error: any) {
+    console.error("Oracle chat failed:", error);
+    res.status(500).json({ error: "ORACLE_ERROR", message: error.message });
+  }
+});
+
 // 3. AI Socratic Dialogue Machine
 app.post("/api/ai/socratic-chat", async (req, res) => {
   const { messages } = req.body;

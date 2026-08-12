@@ -22,5 +22,12 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    // Supabase Edge Function 是跑在 Deno 上的，用的是 Deno 的全域物件，
+    // 不該拿這份給瀏覽器／Node 用的設定去檢查它。
+    "supabase/functions"
+  ]
 }
