@@ -437,20 +437,25 @@ const ORACLE_SYSTEM = `你是《五門・心靈迷宮》裡的「星象」，陪
   或撥打台灣的 1995（生命線）、1925（安心專線）、113（保護專線）。
   這種時候不要問反思問題，也不要提星座。`;
 
-/** 塔羅解牌的規則。三張牌是過去／現在／未來，但「未來」寫成考驗不是預言。 */
-const TAROT_RULES = `你在解一副塔羅牌。三張牌的位置依序是「過去」「現在」「未來」。
+/** 塔羅解牌的規則。三張牌是過去／現在／未來。 */
+const TAROT_RULES = `你是一位塔羅解讀者。三張牌的位置依序是「過去」「現在」「未來」。
 
-寫法（這一段很重要，決定整份報告讀起來的樣子）：
-・寫成一篇散文，不是條列，也不是一張一張分開講。四段要接得起來：
-  回顧過往 → 來到現在 → 往前看 → 總結。段落之間要有轉折句。
-・句子要有畫面。可以用比喻，但比喻要具體，不要空泛的心靈雞湯。
-・用第二人稱「你」。語氣沉穩、誠懇，像一個看得懂你的人在跟你說話。
-・每一段都要扣著對方問的那件事，不要只複述牌義。
-・最後一段收在一句祝福或安定的話上。
+每一張牌都要做兩件事，缺一不可：
+  (1) 先講這張牌本身的意思——逆位就寫成「正位代表……，逆位則暗示……」的對照。
+  (2) 再把它接到對方問的那件事上，講出對他這個問題的具體意涵。
+只講牌義不接問題，是最常見也最糟的解牌，不要這樣寫。
+
+寫法：
+・用第二人稱「你」。語氣沉穩、誠懇、有畫面。
+・比喻要具體，不要空泛的心靈雞湯。
+・如果問題是關於另一個人的心態，就描述那個人可能的狀態，
+  但要說清楚這是牌面反映的可能性，不是事實。
+・綜合結論要**直接回答問題本身**，不要迴避。可以說「極可能」「傾向於」，
+  但要給出一個明確的方向。
+・最後的建議要把注意力帶回問問題的人自己能掌握的部分。
 
 不可以做的事：
-・「未來」那一段寫成「你要面對的考驗」，不要寫成預言。
-  不准出現「會成功」「會分手」「三個月後」「一定會」這種斷言。
+・不要給時間點的斷言（「三個月後」「下週」），不要說「一定會」。
 ・不要神祕兮兮，不要提業力、前世、天命。
 ・不要說教，不要在結尾加「加油」。
 ・全部繁體中文。`;
@@ -511,10 +516,11 @@ app.post("/api/oracle-chat", async (req, res) => {
       const cardText = (cards || []).map((c: any, i: number) =>
         `第 ${i + 1} 張｜位置：${c.slot}
 牌：${c.name}（${c.en}）${c.rev ? "逆位" : "正位"}　主題：${c.theme}
-這張牌在說：${c.meaning}
-生命課題：${c.lesson}
-可能長這樣：${c.life}
-它問的：${c.ask}`).join("\n\n");
+這個牌面（${c.rev ? "逆位" : "正位"}）在說：${c.meaning}${
+          c.rev && c.uprightRef ? `\n同一張牌正位的意思：${c.uprightRef}` : ""
+        }${c.lesson ? `\n生命課題：${c.lesson}` : ""}${
+          c.life ? `\n可能長這樣：${c.life}` : ""
+        }`).join("\n\n");
 
       const prompt = `${question ? `對方問的是：「${question}」` : "對方沒有寫特定問題。"}
 
@@ -524,17 +530,28 @@ ${cardText}
 
 請寫一份解牌報告，用 JSON 回覆：
 
-・title：一句意象化的標題，12 到 20 字，像一句詩。要抓到這三張牌合起來的走向，
-  不要出現牌名。
-・past：從「回顧過往」開始寫第一張牌，至少 250 字。
-・present：從「來到現在」開始寫第二張牌，至少 250 字。要接回他問的那件事。
-・future：從「往前看」或「未來的考驗在於」開始寫第三張牌，至少 250 字。
-  寫成他要面對的功課，不要寫成預言。
-・summary：從「總結來說」開始，把三張連成一條線，指出其中的張力，
-  最後收在一句祝福或安定的話。至少 200 字。
+・opening：兩三句開場，說明這三張牌合起來反映出什麼樣的能量或訊息，
+  並點出接下來會怎麼分析。
+
+・cards：三個元素，順序對應上面三張牌。每個包含
+  - cardName：牌名＋正逆位＋英文，例如「寶劍一逆位（Reversed Ace of Swords）」
+  - aspect：這張牌在這個問題上談的是哪個面向，四到八個字的小標，
+    例如「心智與思緒」「狀態與自信」「信念與外在阻礙」
+  - general：這張牌本身的意思。逆位一定要寫成
+    「正位的◯◯代表……逆位則暗示……」的對照。至少 100 字。
+  - appliedLabel：接下來那一段的小標，要從對方的問題長出來，
+    例如問「他有沒有想我」就用「想你的程度」，問「該不該換組」就用「這個決定的處境」。
+  - applied：把這張牌接到他問的那件事上，講具體的意涵。至少 180 字。
+
+・conclusion：綜合結論。開頭直接回答他問的問題本身，給一個明確的方向
+  （可以說「極可能」「傾向於」，但不要迴避），再說明為什麼三張牌合起來指向這個答案。
+  至少 250 字。
+
+・advice：建議與指引。把注意力帶回他自己能掌握的部分，給具體可做的事。至少 180 字。
+
 ・ask：最後留給他的一個問題，一句話。
 
-四段要能一路讀下來，不要各自獨立。整份至少 1000 字。`;
+整份至少 1000 字。`;
 
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
@@ -545,14 +562,26 @@ ${cardText}
           responseSchema: {
             type: Type.OBJECT,
             properties: {
-              title: { type: Type.STRING },
-              past: { type: Type.STRING },
-              present: { type: Type.STRING },
-              future: { type: Type.STRING },
-              summary: { type: Type.STRING },
+              opening: { type: Type.STRING },
+              cards: {
+                type: Type.ARRAY,
+                items: {
+                  type: Type.OBJECT,
+                  properties: {
+                    cardName: { type: Type.STRING },
+                    aspect: { type: Type.STRING },
+                    general: { type: Type.STRING },
+                    appliedLabel: { type: Type.STRING },
+                    applied: { type: Type.STRING }
+                  },
+                  required: ["cardName", "aspect", "general", "appliedLabel", "applied"]
+                }
+              },
+              conclusion: { type: Type.STRING },
+              advice: { type: Type.STRING },
               ask: { type: Type.STRING }
             },
-            required: ["title", "past", "present", "future", "summary", "ask"]
+            required: ["opening", "cards", "conclusion", "advice", "ask"]
           }
         }
       });
