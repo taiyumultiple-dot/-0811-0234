@@ -50,6 +50,18 @@ const ORACLE_SYSTEM = `你是《五門・心靈迷宮》裡的「星象」，陪
   或撥打台灣的 1995（生命線）、1925（安心專線）、113（保護專線）。
   這種時候不要問反思問題，也不要提星座。`;
 
+/** 塔羅解牌的規則。三張牌的位置與教材的講法一致，不做預言。 */
+const TAROT_RULES = `你在解一副「心象牌」（塔羅大阿爾克那）。三張牌的位置分別是：
+「你帶著什麼」「你正在面對」「你可以練習」——刻意不是過去現在未來。
+
+解牌的規矩：
+・不要預測會發生什麼事，不要說「會成功」「會分手」「三個月後」這種話。
+・牌面是曖昧的意象，你的工作是把它接到對方問的那件事上，讓他自己看見。
+・每一段都要扣著對方的問題講，不要只複述牌義。
+・用第二人稱「你」，語氣平穩，不要神祕兮兮，也不要說教。
+・如果對方沒有問題，就從三張牌本身的關係讀起。
+・全部繁體中文。`;
+
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
@@ -77,7 +89,69 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { mode, date, signName, traits, history, message } = await req.json();
+    const { mode, date, signName, traits, history, message, question, cards } = await req.json();
+
+    if (mode === "tarot") {
+      const cardText = (cards ?? []).map((c: Record<string, string>, i: number) =>
+        `第 ${i + 1} 張｜位置：${c.slot}
+牌：${c.name}（${c.en}）${c.rev ? "逆位" : "正位"}　主題：${c.theme}
+這張牌在說：${c.meaning}
+生命課題：${c.lesson}
+可能長這樣：${c.life}
+它問的：${c.ask}`).join("\n\n");
+
+      const prompt = `${question ? `對方問的是：「${question}」` : "對方沒有寫特定問題。"}
+
+他抽到的三張牌：
+
+${cardText}
+
+請寫一份完整的解牌報告，用 JSON 回覆：
+
+・opening：開場。先回應他的問題本身（如果沒問題就講這三張牌湊在一起的第一印象），
+  說明你打算怎麼讀這三張牌。至少 150 字。
+・cards：三個元素，順序對應上面三張牌。每個包含
+  position（位置名稱，照抄）、cardName（牌名＋正逆位）、
+  text（這張牌在他這件事上的意思，至少 200 字。要具體，要用到牌的主題與課題，
+  要接回他的問題，不要只翻譯牌義）。
+・together：把三張連起來講成一條線，至少 200 字。要指出三張之間的張力或呼應。
+・advice：他今天或這禮拜真的做得到的一件事，至少 150 字，要具體到可以執行。
+・ask：最後留給他的一個問題，一句話。
+
+整份加起來至少 1000 字。`;
+
+      const text = await callGemini({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        systemInstruction: { parts: [{ text: ORACLE_SYSTEM + "\n\n" + TAROT_RULES }] },
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "OBJECT",
+            properties: {
+              opening: { type: "STRING" },
+              cards: {
+                type: "ARRAY",
+                items: {
+                  type: "OBJECT",
+                  properties: {
+                    position: { type: "STRING" },
+                    cardName: { type: "STRING" },
+                    text: { type: "STRING" },
+                  },
+                  required: ["position", "cardName", "text"],
+                },
+              },
+              together: { type: "STRING" },
+              advice: { type: "STRING" },
+              ask: { type: "STRING" },
+            },
+            required: ["opening", "cards", "together", "advice", "ask"],
+          },
+        },
+      });
+
+      return json(JSON.parse(text.trim()));
+    }
 
     if (mode === "horoscope") {
       const prompt = `今天是 ${date}。請為「${signName}」寫今天的一段話。
