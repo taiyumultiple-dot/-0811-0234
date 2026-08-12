@@ -7,7 +7,7 @@ import { UserProfile } from '../types';
 interface GlobalHeaderBannerProps {
   currentUser: UserProfile | null;
   onNavigate: (tabName: string) => void;
-  onTriggerLogin?: (role: 'student' | 'teacher') => void;
+  onTriggerLogin?: () => void;
   onLogout?: () => void;
 }
 
@@ -94,20 +94,13 @@ export default function GlobalHeaderBanner({
                 <span className="hidden sm:inline">使用導覽</span>
               </button>
 
+              {/* 學生和老師共用同一顆按鈕：身分由帳號本身決定，不必先選 */}
               <button
-                onClick={() => onTriggerLogin && onTriggerLogin('student')}
-                className="px-3 py-1.5 md:px-4 md:py-2 border border-[#E65100]/60 hover:bg-[#FFFBF5] text-[#E65100] font-extrabold text-xs rounded-xl transition-all flex items-center gap-1 bg-white shadow-3xs cursor-pointer shrink-0"
+                onClick={() => onTriggerLogin && onTriggerLogin()}
+                className="px-4 py-1.5 md:px-5 md:py-2 bg-[#E65100] hover:bg-[#D84315] text-white font-extrabold text-xs rounded-xl transition-all flex items-center gap-1.5 shadow-3xs cursor-pointer shrink-0"
               >
-                <span className="text-sm">👤</span>
-                <span>學生入口</span>
-              </button>
-              
-              <button
-                onClick={() => onTriggerLogin && onTriggerLogin('teacher')}
-                className="px-3 py-1.5 md:px-4 md:py-2 bg-[#E65100] hover:bg-[#D84315] text-white font-extrabold text-xs rounded-xl transition-all flex items-center gap-1 shadow-3xs cursor-pointer shrink-0"
-              >
-                <span className="text-sm">🔒</span>
-                <span>教師登入</span>
+                <span className="text-sm">🔑</span>
+                <span>登入</span>
               </button>
             </>
           )}

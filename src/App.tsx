@@ -114,7 +114,8 @@ export default function App() {
   // 《五門・心靈迷宮》開著的時候用全螢幕蓋住平台，關掉就回到原本的畫面
   const [showFiveGates, setShowFiveGates] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [authModalTab, setAuthModalTab] = useState<'student_login' | 'teacher_login' | 'register'>('student_login');
+  // 登入不再分學生／教師，身分由帳號本身決定，所以只剩「登入」與「註冊」兩種
+  const [authModalTab, setAuthModalTab] = useState<'login' | 'register'>('login');
   const [showTour, setShowTour] = useState(false);
 
   // Fetch initial state from server on mount
@@ -338,28 +339,9 @@ export default function App() {
     }
   }, [currentUser]);
 
-  // Automated onboarding tour launcher
-  useEffect(() => {
-    if (!isLoaded) return;
-
-    if (!currentUser) {
-      const seenGuest = localStorage.getItem('life_edu_seen_guest_tour');
-      if (seenGuest !== 'true') {
-        const timer = setTimeout(() => {
-          setShowTour(true);
-        }, 1200);
-        return () => clearTimeout(timer);
-      }
-    } else {
-      const seenUser = localStorage.getItem(`life_edu_seen_user_tour_${currentUser.id}`);
-      if (seenUser !== 'true') {
-        const timer = setTimeout(() => {
-          setShowTour(true);
-        }, 1200);
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [isLoaded, currentUser]);
+  // 導覽一律由使用者自己點右上角的「使用導覽」開啟。
+  // 原本這裡有一段 useEffect，會在載入後 1.2 秒自動彈出，
+  // 每個訪客一次、每個帳號再一次——一進站就被擋住很煩，已移除。
 
   const currentStudent = submissions.find(s => s.studentId === activeStudentId) || submissions[0];
 
@@ -371,13 +353,7 @@ export default function App() {
   const handleLoginSuccess = (user: UserProfile) => {
     setCurrentUser(user);
     setActiveTab('首頁');
-
-    // First-time login: auto-show the guided tour once per account
-    const seenKey = `life_edu_tour_seen_${user.id}`;
-    if (!safeStorage.getItem(seenKey)) {
-      safeStorage.setItem(seenKey, '1');
-      setShowTour(true);
-    }
+    // 登入後不自動跳導覽，想看的人自己點右上角的「使用導覽」
   };
 
   const handleRegisterUser = (user: UserProfile) => {
@@ -493,7 +469,7 @@ export default function App() {
       return;
     }
     if (!currentUser && ['課本單元', '課程地圖', '學習統計', '互動遊戲', '學習紀錄'].includes(tabName)) {
-      setAuthModalTab('student_login');
+      setAuthModalTab('login');
       setShowAuthModal(true);
       return;
     }
@@ -594,7 +570,7 @@ export default function App() {
               {!currentUser ? (
                 <button
                   onClick={() => {
-                    setAuthModalTab('student_login');
+                    setAuthModalTab('login');
                     setShowAuthModal(true);
                   }}
                   className="px-5 py-2 bg-[#E65100] hover:bg-[#D84315] text-white rounded-full text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
@@ -642,8 +618,8 @@ export default function App() {
           <GlobalHeaderBanner 
             currentUser={currentUser}
             onNavigate={handleTabSelection}
-            onTriggerLogin={(role) => {
-              setAuthModalTab(role === 'student' ? 'student_login' : 'teacher_login');
+            onTriggerLogin={() => {
+              setAuthModalTab('login');
               setShowAuthModal(true);
             }}
             onLogout={handleLogout}
@@ -674,8 +650,8 @@ export default function App() {
                 submissions={submissions}
                 characters={characters}
                 currentUser={currentUser}
-                onTriggerLogin={(role) => {
-                  setAuthModalTab(role === 'student' ? 'student_login' : 'teacher_login');
+                onTriggerLogin={() => {
+                  setAuthModalTab('login');
                   setShowAuthModal(true);
                 }}
                 onLogout={handleLogout}
@@ -895,7 +871,7 @@ export default function App() {
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.95, y: 20, opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-              className="relative w-full max-w-lg z-10"
+              className="relative w-full max-w-sm z-10"
             >
               <AuthScreen 
                 onLoginSuccess={(user) => {
@@ -920,8 +896,8 @@ export default function App() {
         currentUser={currentUser}
         isOpen={showTour}
         onClose={() => setShowTour(false)}
-        onStartLogin={(role) => {
-          setAuthModalTab(role === 'student' ? 'student_login' : 'teacher_login');
+        onStartLogin={() => {
+          setAuthModalTab('login');
           setShowAuthModal(true);
         }}
       />

@@ -28,7 +28,7 @@ import { UserProfile } from '../types';
 
 interface WelcomeTourProps {
   currentUser: UserProfile | null;
-  onStartLogin?: (role: 'student' | 'teacher') => void;
+  onStartLogin?: () => void;
   isOpen: boolean;
   onClose: () => void;
   isManualTrigger?: boolean;

@@ -32,7 +32,7 @@ interface HomeTabProps {
   characters: Character[];
   onUpdateCharacterClick?: (charId: string) => void;
   currentUser?: UserProfile | null;
-  onTriggerLogin?: (role: 'student' | 'teacher') => void;
+  onTriggerLogin?: () => void;
   onLogout?: () => void;
   /** 開啟《五門・心靈迷宮》（public/lifequest/ 的獨立遊戲） */
   onOpenFiveGates?: () => void;
