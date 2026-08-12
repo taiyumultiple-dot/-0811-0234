@@ -398,11 +398,11 @@ export default function LearningRecordTab({
   ];
 
   return (
-    <div className="min-h-screen bg-[#081225] text-slate-100 p-4 md:p-8 font-sans relative">
+    <div className="font-sans relative">
       
       {/* Toast Banner */}
       {toast && (
-        <div className="fixed top-20 right-6 z-50 bg-[#00E699] text-[#081225] px-5 py-3 rounded-2xl shadow-xl font-extrabold flex items-center gap-2 animate-bounce">
+        <div className="fixed top-20 right-6 z-50 bg-[#E65100] text-white px-5 py-3 rounded-2xl shadow-xl font-extrabold flex items-center gap-2 animate-bounce">
           <span>{toast}</span>
         </div>
       )}
@@ -412,23 +412,23 @@ export default function LearningRecordTab({
         {/* ========================================================= */}
         {/* HEADER TITLE BAR (Style matching Image 2)                  */}
         {/* ========================================================= */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between bg-[#0D1D38] border border-[#1A3660] rounded-2xl p-5 md:p-6 shadow-xl gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between bg-white border border-[#F1E0CE] rounded-2xl p-5 md:p-6 shadow-xl gap-4">
           
           {/* Left Title & Student Selector */}
           <div>
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-[#00E699]/10 border border-[#00E699]/40 rounded-xl text-[#00E699]">
+              <div className="p-2.5 bg-[#FFF3E0] border border-[#F5C99B] rounded-xl text-[#E65100]">
                 <BarChart3 className="w-6 h-6" />
               </div>
               <div>
-                <h1 className="text-xl md:text-2xl font-black text-white tracking-tight flex items-center gap-2 flex-wrap">
+                <h1 className="text-xl md:text-2xl font-black text-[#3E2723] tracking-tight flex items-center gap-2 flex-wrap">
                   <span>我的生命教育學習紀錄</span>
-                  <span className="text-xs font-bold text-[#00E699] bg-[#00E699]/10 border border-[#00E699]/30 px-3 py-1 rounded-full flex items-center gap-1.5 font-mono">
-                    <span className="w-2 h-2 rounded-full bg-[#00E699] animate-pulse"></span>
+                  <span className="text-xs font-bold text-[#E65100] bg-[#FFF3E0] border border-[#F5C99B] px-3 py-1 rounded-full flex items-center gap-1.5 font-mono">
+                    <span className="w-2 h-2 rounded-full bg-[#E65100] animate-pulse"></span>
                     實時同步中 {currentTime || '14:50:12'}
                   </span>
                 </h1>
-                <p className="text-xs text-slate-400 font-medium mt-1">
+                <p className="text-xs text-[#8D6E63] font-medium mt-1">
                   即時統計作答成效、遊戲通關成績與核心素養學習趨勢圖表
                 </p>
               </div>
@@ -440,15 +440,15 @@ export default function LearningRecordTab({
             
             {/* Student Switcher Dropdown */}
             {submissions.length > 1 && (
-              <div className="flex items-center gap-1.5 bg-[#081225] border border-[#1A3660] rounded-xl px-3 py-1.5">
-                <User className="w-4 h-4 text-[#00E699]" />
+              <div className="flex items-center gap-1.5 bg-[#FCFAF6] border border-[#F1E0CE] rounded-xl px-3 py-1.5">
+                <User className="w-4 h-4 text-[#E65100]" />
                 <select
                   value={selectedStudentId}
                   onChange={(e) => setSelectedStudentId(e.target.value)}
-                  className="bg-transparent text-xs font-bold text-white outline-none cursor-pointer"
+                  className="bg-transparent text-xs font-bold text-[#3E2723] outline-none cursor-pointer"
                 >
                   {submissions.map(s => (
-                    <option key={s.studentId} value={s.studentId} className="bg-[#081225] text-white">
+                    <option key={s.studentId} value={s.studentId} className="bg-[#FCFAF6] text-[#3E2723]">
                       {s.studentName} {s.studentId === currentUser?.id ? '(目前登入)' : ''}
                     </option>
                   ))}
@@ -458,7 +458,7 @@ export default function LearningRecordTab({
 
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-4 py-2.5 bg-[#00E699] hover:bg-[#00c885] text-[#081225] font-extrabold text-xs rounded-xl shadow-lg transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+              className="px-4 py-2.5 bg-[#E65100] hover:bg-[#D84315] text-white font-extrabold text-xs rounded-xl shadow-lg transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
             >
               <PlusCircle className="w-4 h-4" />
               <span>新增測驗紀錄</span>
@@ -466,7 +466,7 @@ export default function LearningRecordTab({
 
             <button
               onClick={() => showNotification('🔄 已完成全站課本與遊戲數據同步！')}
-              className="p-2.5 bg-[#152B4F] hover:bg-[#1E3A6B] border border-[#234880] text-cyan-300 rounded-xl transition-all cursor-pointer"
+              className="p-2.5 bg-white hover:bg-[#FFF6EE] border-2 border-[#EAD5C3] text-[#B4570B] rounded-xl transition-colors cursor-pointer"
               title="重新同步數據"
             >
               <RefreshCw className="w-4 h-4" />
@@ -474,7 +474,7 @@ export default function LearningRecordTab({
 
             <button
               onClick={handleClearCustomRecords}
-              className="px-3.5 py-2.5 bg-rose-950/60 hover:bg-rose-900/80 border border-rose-800/60 text-rose-300 font-extrabold text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2.5 bg-white hover:bg-rose-50 border-2 border-[#EAD5C3] hover:border-rose-300 text-[#8D6E63] hover:text-rose-600 font-extrabold text-xs rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <Trash2 className="w-4 h-4" />
               <span>清除</span>
@@ -489,23 +489,23 @@ export default function LearningRecordTab({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           
           {/* Card 1: 獲得總星星 */}
-          <div className="bg-[#0D1D38] border border-[#1A3B6B] hover:border-[#00E699]/60 rounded-2xl p-5 shadow-lg flex items-center justify-between transition-all group">
+          <div className="bg-white border border-[#EAD5C3] hover:border-[#E65100] rounded-2xl p-5 shadow-lg flex items-center justify-between transition-all group">
             <div className="space-y-1">
-              <span className="text-xs font-bold text-slate-400 block tracking-wider">獲得總星星</span>
-              <div className="text-3xl font-black text-white tracking-tight flex items-baseline gap-1">
+              <span className="text-xs font-bold text-[#8D6E63] block tracking-wider">獲得總星星</span>
+              <div className="text-3xl font-black text-[#3E2723] tracking-tight flex items-baseline gap-1">
                 <span>{totalStars}</span>
                 <span className="text-amber-400 text-xl">★</span>
               </div>
             </div>
-            <div className="w-14 h-14 rounded-2xl bg-[#00E699]/10 border border-[#00E699]/40 flex items-center justify-center text-[#00E699] group-hover:scale-110 transition-all">
+            <div className="w-14 h-14 rounded-2xl bg-[#FFF3E0] border border-[#F5C99B] flex items-center justify-center text-[#E65100] group-hover:scale-110 transition-all">
               <Award className="w-7 h-7" />
             </div>
           </div>
 
           {/* Card 2: 平均答對率 */}
-          <div className="bg-[#0D1D38] border border-[#1A3B6B] hover:border-cyan-400/60 rounded-2xl p-5 shadow-lg flex items-center justify-between transition-all group">
+          <div className="bg-white border border-[#EAD5C3] hover:border-cyan-400/60 rounded-2xl p-5 shadow-lg flex items-center justify-between transition-all group">
             <div className="space-y-1">
-              <span className="text-xs font-bold text-slate-400 block tracking-wider">平均答對率</span>
+              <span className="text-xs font-bold text-[#8D6E63] block tracking-wider">平均答對率</span>
               <div className="text-3xl font-black text-cyan-300 tracking-tight">
                 {avgAccuracy}
               </div>
@@ -516,12 +516,12 @@ export default function LearningRecordTab({
           </div>
 
           {/* Card 3: 最高分紀錄 */}
-          <div className="bg-[#0D1D38] border border-[#1A3B6B] hover:border-amber-400/60 rounded-2xl p-5 shadow-lg flex items-center justify-between transition-all group">
+          <div className="bg-white border border-[#EAD5C3] hover:border-amber-400/60 rounded-2xl p-5 shadow-lg flex items-center justify-between transition-all group">
             <div className="space-y-1">
-              <span className="text-xs font-bold text-slate-400 block tracking-wider">最高分紀錄</span>
+              <span className="text-xs font-bold text-[#8D6E63] block tracking-wider">最高分紀錄</span>
               <div className="text-3xl font-black text-amber-400 tracking-tight flex items-baseline gap-1">
                 <span>{maxScore}</span>
-                <span className="text-sm font-bold text-slate-400">分</span>
+                <span className="text-sm font-bold text-[#8D6E63]">分</span>
               </div>
             </div>
             <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-400/40 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-all">
@@ -530,12 +530,12 @@ export default function LearningRecordTab({
           </div>
 
           {/* Card 4: 累計挑戰次數 */}
-          <div className="bg-[#0D1D38] border border-[#1A3B6B] hover:border-purple-400/60 rounded-2xl p-5 shadow-lg flex items-center justify-between transition-all group">
+          <div className="bg-white border border-[#EAD5C3] hover:border-purple-400/60 rounded-2xl p-5 shadow-lg flex items-center justify-between transition-all group">
             <div className="space-y-1">
-              <span className="text-xs font-bold text-slate-400 block tracking-wider">累計挑戰次數</span>
+              <span className="text-xs font-bold text-[#8D6E63] block tracking-wider">累計挑戰次數</span>
               <div className="text-3xl font-black text-purple-300 tracking-tight flex items-baseline gap-1">
                 <span>{totalAttempts}</span>
-                <span className="text-sm font-bold text-slate-400">次</span>
+                <span className="text-sm font-bold text-[#8D6E63]">次</span>
               </div>
             </div>
             <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-400/40 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-all">
@@ -550,16 +550,16 @@ export default function LearningRecordTab({
         {/* ROW 2: MAIN LINE CHART (學習成績表現與趨勢分析圖)          */}
         {/* ========================================================= */}
         <CollapsibleSection
-          variant="dark"
-          icon={<Activity className="w-5 h-5 text-[#00E699]" />}
+          variant="light"
+          icon={<Activity className="w-5 h-5 text-[#E65100]" />}
           title={`學習成績表現與趨勢分析圖 (${currentSub.studentName})`}
           subtitle="包含歷次隨堂測驗、互動遊戲通關與客製化測驗成績變動趨勢"
           defaultExpanded={true}
         >
           <div className="space-y-3">
-            <div className="flex items-center justify-end gap-4 text-xs font-bold border-b border-[#1A3660] pb-3">
-              <span className="flex items-center gap-1.5 text-[#00E699]">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#00E699]"></span>
+            <div className="flex items-center justify-end gap-4 text-xs font-bold border-b border-[#F1E0CE] pb-3">
+              <span className="flex items-center gap-1.5 text-[#E65100]">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#E65100]"></span>
                 得分趨勢 (0-100)
               </span>
               <span className="flex items-center gap-1.5 text-cyan-400">
@@ -571,28 +571,28 @@ export default function LearningRecordTab({
             <div className="h-64 md:h-72 w-full pt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={trendChartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1A3B6B" />
-                  <XAxis dataKey="name" stroke="#64748B" tick={{ fontSize: 12, fill: '#94A3B8' }} />
-                  <YAxis domain={[0, 100]} stroke="#64748B" tick={{ fontSize: 12, fill: '#94A3B8' }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#EFE3D6" />
+                  <XAxis dataKey="name" stroke="#C4A484" tick={{ fontSize: 12, fill: '#8D6E63' }} />
+                  <YAxis domain={[0, 100]} stroke="#C4A484" tick={{ fontSize: 12, fill: '#8D6E63' }} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#0B192C', borderColor: '#1E3A6B', borderRadius: '12px', color: '#fff' }}
-                    itemStyle={{ color: '#00E699', fontWeight: 'bold' }}
+                    contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#EAD5C3', borderRadius: '12px', color: '#3E2723' }}
+                    itemStyle={{ color: '#E65100', fontWeight: 'bold' }}
                   />
                   <Line
                     type="monotone"
                     dataKey="得分趨勢"
-                    stroke="#00E699"
+                    stroke="#E65100"
                     strokeWidth={3}
-                    dot={{ r: 5, fill: '#00E699', stroke: '#081225', strokeWidth: 2 }}
-                    activeDot={{ r: 8, fill: '#00E699' }}
+                    dot={{ r: 5, fill: '#E65100', stroke: '#FFFFFF', strokeWidth: 2 }}
+                    activeDot={{ r: 8, fill: '#E65100' }}
                   />
                   <Line
                     type="monotone"
                     dataKey="答對率"
-                    stroke="#38BDF8"
+                    stroke="#2E7D32"
                     strokeWidth={2}
                     strokeDasharray="4 4"
-                    dot={{ r: 4, fill: '#38BDF8' }}
+                    dot={{ r: 4, fill: '#2E7D32' }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -602,168 +602,13 @@ export default function LearningRecordTab({
 
 
         {/* ========================================================= */}
-        {/* ROW 3: RADAR CHART + GAME PASS RATES + WEEKLY HOURS       */}
-        {/* ========================================================= */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          {/* Card 1: 核心素養能力雷達圖 */}
-          <CollapsibleSection
-            variant="dark"
-            icon={<span className="text-lg">🕸️</span>}
-            title={`核心素養能力雷達圖`}
-            subtitle={currentSub.studentName}
-            defaultExpanded={true}
-          >
-            <div className="space-y-3">
-              <div className="h-56 w-full flex items-center justify-center">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                    <PolarGrid stroke="#1E3A6B" />
-                    <PolarAngleAxis dataKey="subject" stroke="#94A3B8" tick={{ fontSize: 11, fill: '#00E699', fontWeight: 'bold' }} />
-                    <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="#334155" />
-                    <Radar name="能力指標" dataKey="A" stroke="#00E699" fill="#00E699" fillOpacity={0.35} />
-                  </RadarChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="bg-[#081225] p-3 rounded-xl border border-[#1A3660] text-xs text-slate-300 flex items-start gap-2">
-                <Sparkles className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <span>實時分析：您的<strong>「思考與思辨」</strong>發展優異！可在「互動遊戲」探索更多靜心與成長任務。</span>
-              </div>
-            </div>
-          </CollapsibleSection>
-
-          {/* Card 2: 各遊戲關卡通關率 (Synced with Interactive Games) */}
-          <CollapsibleSection
-            variant="dark"
-            icon={<span className="text-lg">🎮</span>}
-            title="各遊戲關卡通關率"
-            subtitle="共 10 款互動遊戲實時數據"
-            defaultExpanded={true}
-          >
-            <div className="space-y-3">
-              <div className="h-56 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={gamePassData} margin={{ top: 10, right: 10, left: -20, bottom: 25 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1A3B6B" />
-                    <XAxis dataKey="name" stroke="#64748B" tick={{ fontSize: 9, fill: '#94A3B8' }} interval={0} angle={-20} textAnchor="end" />
-                    <YAxis domain={[0, 100]} stroke="#64748B" tick={{ fontSize: 10, fill: '#94A3B8' }} />
-                    <Tooltip contentStyle={{ backgroundColor: '#0B192C', borderColor: '#1E3A6B', color: '#fff' }} />
-                    <Bar dataKey="通關率" fill="#00E699" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="flex items-center justify-between text-[11px] text-cyan-400 font-bold border-t border-[#1A3660] pt-2">
-                <span>實時連動數據</span>
-                <button
-                  onClick={() => onNavigate && onNavigate('互動遊戲')}
-                  className="text-[#00E699] hover:underline cursor-pointer"
-                >
-                  前往挑戰遊戲 →
-                </button>
-              </div>
-            </div>
-          </CollapsibleSection>
-
-          {/* Card 3: 本週學習時長趨勢 */}
-          <CollapsibleSection
-            variant="dark"
-            icon={<span className="text-lg">⏱️</span>}
-            title="本週學習時長趨勢"
-            badge={
-              <span className="text-xs font-bold text-[#00E699] bg-[#00E699]/10 px-2.5 py-0.5 rounded-md">
-                平均 3.8 小時/天
-              </span>
-            }
-            defaultExpanded={true}
-          >
-            <div className="space-y-3">
-              <div className="h-56 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={weeklyHoursData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1A3B6B" />
-                    <XAxis dataKey="day" stroke="#64748B" tick={{ fontSize: 11, fill: '#94A3B8' }} />
-                    <YAxis stroke="#64748B" tick={{ fontSize: 11, fill: '#94A3B8' }} />
-                    <Tooltip contentStyle={{ backgroundColor: '#0B192C', borderColor: '#1E3A6B', color: '#fff' }} />
-                    <Line type="monotone" dataKey="小時" stroke="#A855F7" strokeWidth={3} dot={{ fill: '#A855F7', r: 4 }} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="text-center text-xs text-slate-400 font-medium border-t border-[#1A3660] pt-2">
-                本週累計投入：<strong>26.8 小時</strong>，較上週提升 14%
-              </div>
-            </div>
-          </CollapsibleSection>
-
-        </div>
-
-
-        {/* ========================================================= */}
         {/* ROW 4: 最常答錯 TOP 5 題型 & 課本進度 (Match Image 2 bottom) */}
         {/* ========================================================= */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           
-          {/* TOP 5 Errors Table (2 Columns) */}
-          <div className="lg:col-span-2">
-            <CollapsibleSection
-              variant="dark"
-              icon={<span className="text-lg">❌</span>}
-              title="最常答錯 TOP 5 題型 / 錯題分析"
-              badge={
-                <span className="text-xs text-amber-400 font-bold bg-amber-400/10 px-2.5 py-0.5 rounded-full border border-amber-400/30">
-                  可定位課本複習
-                </span>
-              }
-              defaultExpanded={true}
-            >
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead>
-                    <tr className="border-b border-[#1A3660] text-slate-400 font-bold">
-                      <th className="py-2.5 px-3">排名</th>
-                      <th className="py-2.5 px-3">單元與知識點</th>
-                      <th className="py-2.5 px-3">錯誤率</th>
-                      <th className="py-2.5 px-3">主要錯誤類型</th>
-                      <th className="py-2.5 px-3 text-right">練習建議</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#1A3660]">
-                    {topErrors.map(item => (
-                      <tr key={item.rank} className="hover:bg-[#152B4F]/60 transition-all">
-                        <td className="py-3 px-3 font-black">
-                          <span className={`w-6 h-6 rounded-full inline-flex items-center justify-center text-xs font-bold ${
-                            item.rank === 1 ? 'bg-rose-500 text-white' :
-                            item.rank === 2 ? 'bg-amber-500 text-white' :
-                            item.rank === 3 ? 'bg-amber-600 text-white' : 'bg-slate-700 text-slate-300'
-                          }`}>
-                            {item.rank}
-                          </span>
-                        </td>
-                        <td className="py-3 px-3 font-bold text-slate-100">{item.topic}</td>
-                        <td className="py-3 px-3 font-extrabold text-rose-400">{item.rate}</td>
-                        <td className="py-3 px-3 text-slate-300">{item.type}</td>
-                        <td className="py-3 px-3 text-right">
-                          <button
-                            onClick={() => {
-                              if (onSelectUnit) onSelectUnit(item.unitId);
-                              if (onNavigate) onNavigate('課本單元');
-                              showNotification(`📖 已定位至課本單元：${item.pageNote}`);
-                            }}
-                            className="px-2.5 py-1 bg-[#00E699]/10 hover:bg-[#00E699]/20 text-[#00E699] border border-[#00E699]/40 rounded-lg text-[11px] font-bold transition-all cursor-pointer"
-                          >
-                            複習 {item.pageNote}
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </CollapsibleSection>
-          </div>
-
           {/* Unit Textbook & Animation Progress */}
           <CollapsibleSection
-            variant="dark"
+            variant="light"
             icon={<span className="text-lg">🎬</span>}
             title="課本與動畫閱讀完成度"
             subtitle="全單元閱讀學習進度"
@@ -778,7 +623,7 @@ export default function LearningRecordTab({
                       if (onSelectUnit) onSelectUnit(item.unitId);
                       if (onNavigate) onNavigate('課本單元');
                     }}
-                    className="bg-[#081225] hover:bg-[#122442] border border-[#1A3660] hover:border-[#00E699]/60 rounded-xl p-3 flex flex-col items-center justify-center space-y-1.5 text-center cursor-pointer transition-all group"
+                    className="bg-[#FCFAF6] hover:bg-[#122442] border border-[#F1E0CE] hover:border-[#E65100] rounded-xl p-3 flex flex-col items-center justify-center space-y-1.5 text-center cursor-pointer transition-all group"
                   >
                     <div className={`w-14 h-14 rounded-full border-4 ${item.bg} flex items-center justify-center text-sm font-black ${item.color} group-hover:scale-105 transition-all`}>
                       {item.percent}%
@@ -792,7 +637,7 @@ export default function LearningRecordTab({
                 onClick={() => {
                   if (onNavigate) onNavigate('課本單元');
                 }}
-                className="w-full py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs rounded-xl shadow-md transition-all text-center cursor-pointer flex items-center justify-center gap-1.5"
+                className="w-full py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-[#3E2723] font-extrabold text-xs rounded-xl shadow-md transition-all text-center cursor-pointer flex items-center justify-center gap-1.5"
               >
                 <BookOpen className="w-4 h-4" />
                 <span>繼續閱讀課本單元 →</span>
@@ -809,39 +654,39 @@ export default function LearningRecordTab({
       {/* ========================================================= */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-[#0D1D38] border-2 border-[#00E699] rounded-3xl p-6 md:p-8 max-w-lg w-full text-slate-100 shadow-2xl relative space-y-5">
+          <div className="bg-white border-2 border-[#E65100] rounded-3xl p-6 md:p-8 max-w-lg w-full text-[#3E2723] shadow-2xl relative space-y-5">
             <button
               onClick={() => setShowAddModal(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-full cursor-pointer"
+              className="absolute top-4 right-4 text-[#8D6E63] hover:text-[#3E2723] p-1 rounded-full cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center gap-2 border-b border-[#1A3660] pb-3">
-              <PlusCircle className="w-6 h-6 text-[#00E699]" />
-              <h3 className="text-xl font-black text-white">新增測驗作答紀錄 ({currentSub.studentName})</h3>
+            <div className="flex items-center gap-2 border-b border-[#F1E0CE] pb-3">
+              <PlusCircle className="w-6 h-6 text-[#E65100]" />
+              <h3 className="text-xl font-black text-[#3E2723]">新增測驗作答紀錄 ({currentSub.studentName})</h3>
             </div>
 
             <form onSubmit={handleAddRecord} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1">測驗或評量名稱</label>
+                <label className="block text-xs font-bold text-[#5D4037] mb-1">測驗或評量名稱</label>
                 <input
                   type="text"
                   required
                   placeholder="例如：單元三 終極關懷 隨堂測驗"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full bg-[#081225] border border-[#1A3660] rounded-xl p-3 text-sm font-bold text-white outline-none focus:border-[#00E699]"
+                  className="w-full bg-[#FCFAF6] border border-[#F1E0CE] rounded-xl p-3 text-sm font-bold text-[#3E2723] outline-none focus:border-[#E65100]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 mb-1">對應學習類別</label>
+                  <label className="block text-xs font-bold text-[#5D4037] mb-1">對應學習類別</label>
                   <select
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
-                    className="w-full bg-[#081225] border border-[#1A3660] rounded-xl p-3 text-sm font-bold text-white outline-none focus:border-[#00E699]"
+                    className="w-full bg-[#FCFAF6] border border-[#F1E0CE] rounded-xl p-3 text-sm font-bold text-[#3E2723] outline-none focus:border-[#E65100]"
                   >
                     <option value="思考與思辨">思考與思辨</option>
                     <option value="人學探索">人學探索</option>
@@ -852,7 +697,7 @@ export default function LearningRecordTab({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 mb-1">獲得分數 (0-100)</label>
+                  <label className="block text-xs font-bold text-[#5D4037] mb-1">獲得分數 (0-100)</label>
                   <input
                     type="number"
                     min="0"
@@ -860,26 +705,26 @@ export default function LearningRecordTab({
                     required
                     value={newScore}
                     onChange={(e) => setNewScore(Number(e.target.value))}
-                    className="w-full bg-[#081225] border border-[#1A3660] rounded-xl p-3 text-sm font-bold text-white outline-none focus:border-[#00E699]"
+                    className="w-full bg-[#FCFAF6] border border-[#F1E0CE] rounded-xl p-3 text-sm font-bold text-[#3E2723] outline-none focus:border-[#E65100]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 mb-1">總題數</label>
+                  <label className="block text-xs font-bold text-[#5D4037] mb-1">總題數</label>
                   <input
                     type="number"
                     min="1"
                     required
                     value={newTotal}
                     onChange={(e) => setNewTotal(Number(e.target.value))}
-                    className="w-full bg-[#081225] border border-[#1A3660] rounded-xl p-3 text-sm font-bold text-white outline-none focus:border-[#00E699]"
+                    className="w-full bg-[#FCFAF6] border border-[#F1E0CE] rounded-xl p-3 text-sm font-bold text-[#3E2723] outline-none focus:border-[#E65100]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 mb-1">答對題數</label>
+                  <label className="block text-xs font-bold text-[#5D4037] mb-1">答對題數</label>
                   <input
                     type="number"
                     min="0"
@@ -887,19 +732,19 @@ export default function LearningRecordTab({
                     required
                     value={newCorrect}
                     onChange={(e) => setNewCorrect(Number(e.target.value))}
-                    className="w-full bg-[#081225] border border-[#1A3660] rounded-xl p-3 text-sm font-bold text-white outline-none focus:border-[#00E699]"
+                    className="w-full bg-[#FCFAF6] border border-[#F1E0CE] rounded-xl p-3 text-sm font-bold text-[#3E2723] outline-none focus:border-[#E65100]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1">測驗心得或省思筆記 (選填)</label>
+                <label className="block text-xs font-bold text-[#5D4037] mb-1">測驗心得或省思筆記 (選填)</label>
                 <textarea
                   rows={2}
                   placeholder="紀錄這次測驗答錯的點或學習體會..."
                   value={newNotes}
                   onChange={(e) => setNewNotes(e.target.value)}
-                  className="w-full bg-[#081225] border border-[#1A3660] rounded-xl p-3 text-sm font-medium text-white outline-none focus:border-[#00E699]"
+                  className="w-full bg-[#FCFAF6] border border-[#F1E0CE] rounded-xl p-3 text-sm font-medium text-[#3E2723] outline-none focus:border-[#E65100]"
                 />
               </div>
 
@@ -907,13 +752,13 @@ export default function LearningRecordTab({
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-5 py-2.5 rounded-xl border border-slate-600 text-slate-300 font-bold text-xs hover:bg-slate-800 cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl border border-slate-600 text-[#5D4037] font-bold text-xs hover:bg-slate-800 cursor-pointer"
                 >
                   取消
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-xl bg-[#00E699] hover:bg-[#00c885] text-[#081225] font-extrabold text-xs shadow-lg cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl bg-[#E65100] hover:bg-[#D84315] text-white font-extrabold text-xs shadow-lg cursor-pointer"
                 >
                   儲存並更新圖表
                 </button>

@@ -449,7 +449,7 @@ export default function App() {
   const navItems = [
     { name: '首頁', icon: Home, badge: null },
     { name: '課本單元', icon: Map, badge: null },
-    { name: '互動遊戲', icon: Gamepad2, badge: null },
+    { name: '人物介紹', icon: Users, badge: null },
     { name: '學習紀錄', icon: FileText, badge: null },
     { name: '最新消息', icon: Bell, badge: null },
     ...(currentUser?.role === 'teacher' ? [{ name: '學習統計', icon: TrendingUp, badge: null }] : [])
@@ -468,7 +468,7 @@ export default function App() {
       }, 100);
       return;
     }
-    if (!currentUser && ['課本單元', '課程地圖', '學習統計', '互動遊戲', '學習紀錄'].includes(tabName)) {
+    if (!currentUser && ['課本單元', '課程地圖', '學習統計', '學習紀錄'].includes(tabName)) {
       setAuthModalTab('login');
       setShowAuthModal(true);
       return;
@@ -485,7 +485,7 @@ export default function App() {
       {/* ========================================================= */}
       {/* 1. BRAND HEADER & NAVBAR                                 */}
       {/* ========================================================= */}
-      {activeTab !== '首頁' && (
+      {(
         <header className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-2xs">
           <div className="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
             
@@ -613,17 +613,9 @@ export default function App() {
       {/* 2. MAIN WORKSPACE CONTAINER                              */}
       {/* ========================================================= */}
       <main className="max-w-7xl w-full mx-auto p-4 lg:p-6 pb-24 lg:pb-6 flex-1">
-        {/* Header Banner shown only on Home tab */}
+        {/* 首頁專屬的角色橫幅。頁首已經全站共用，這裡只放橫幅 */}
         {activeTab === '首頁' && (
-          <GlobalHeaderBanner 
-            currentUser={currentUser}
-            onNavigate={handleTabSelection}
-            onTriggerLogin={() => {
-              setAuthModalTab('login');
-              setShowAuthModal(true);
-            }}
-            onLogout={handleLogout}
-          />
+          <GlobalHeaderBanner onNavigate={handleTabSelection} />
         )}
 
         <AnimatePresence mode="wait">
@@ -684,15 +676,10 @@ export default function App() {
               />
             )}
 
-            {activeTab === '互動遊戲' && (
-              <InteractiveQuestTab 
-                currentStudent={currentStudent}
-                onSaveQuest={handleSaveQuest}
-                role={role}
-                submissions={submissions}
-                onSaveQuestFeedback={handleSaveQuestFeedback}
-                defaultQuest={activeQuestType}
-                defaultGameId={initialGameId || undefined}
+            {activeTab === '人物介紹' && (
+              <CharacterStoryTab
+                characters={characters}
+                onNavigate={handleTabSelection}
               />
             )}
 
@@ -728,10 +715,7 @@ export default function App() {
             )}
 
             {activeTab === '最新消息' && (
-              <LatestNewsTab 
-                currentUser={currentUser}
-                onNavigate={handleTabSelection}
-              />
+              <LatestNewsTab />
             )}
 
             {activeTab === '學習統計' && currentUser?.role === 'teacher' && (
