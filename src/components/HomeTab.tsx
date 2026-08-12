@@ -34,6 +34,8 @@ interface HomeTabProps {
   currentUser?: UserProfile | null;
   onTriggerLogin?: (role: 'student' | 'teacher') => void;
   onLogout?: () => void;
+  /** 開啟《五門・心靈迷宮》（public/lifequest/ 的獨立遊戲） */
+  onOpenFiveGates?: () => void;
 }
 
 export default function HomeTab({ 
@@ -46,7 +48,8 @@ export default function HomeTab({
   onUpdateCharacterClick,
   currentUser,
   onTriggerLogin,
-  onLogout
+  onLogout,
+  onOpenFiveGates
 }: HomeTabProps) {
 
   const [toastMessage, setToastMessage] = React.useState<string | null>(null);
@@ -365,7 +368,7 @@ export default function HomeTab({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-[#F1E0CE]/80 pb-4 gap-3">
             <div className="flex items-center gap-2.5">
               <Gamepad2 className="w-6 h-6 text-[#E65100]" />
-              <h3 className="text-xl md:text-2xl font-black text-[#3E2723]">課堂專用互動遊戲 (清空重置中)</h3>
+              <h3 className="text-xl md:text-2xl font-black text-[#3E2723]">課堂專用互動遊戲</h3>
             </div>
             
             <button
@@ -378,17 +381,60 @@ export default function HomeTab({
           </div>
 
           {GAMES.length === 0 ? (
-            <div className="bg-white border-2 border-dashed border-[#EAD5C3] rounded-3xl p-8 md:p-12 text-center space-y-4 shadow-3xs">
-              <div className="w-16 h-16 mx-auto rounded-full bg-orange-50 border-2 border-orange-200 flex items-center justify-center text-3xl text-[#E65100] shadow-xs">
-                🗑️
+            /* 舊的 10 款遊戲已清空。這裡放《五門・心靈迷宮》的獨立入口——
+               遊戲本體是 public/lifequest/ 底下的獨立 HTML 專案，用 iframe 開。 */
+            <button
+              onClick={onOpenFiveGates}
+              className="w-full text-left bg-[#0B1220] border-2 border-[#E65100]/30 hover:border-[#E65100] rounded-3xl overflow-hidden transition-all duration-300 shadow-sm hover:shadow-lg hover:-translate-y-1 group cursor-pointer"
+            >
+              <div className="flex flex-col md:flex-row">
+                <div className="md:w-2/5 h-44 md:h-auto relative shrink-0">
+                  <img
+                    src={`${import.meta.env.BASE_URL}lifequest/assets/scenes/gate-hall.webp`}
+                    alt="矗立著五扇高聳大門的心靈迷宮"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#0B1220] via-[#0B1220]/40 to-transparent" />
+                </div>
+
+                <div className="flex-1 p-6 md:p-8 space-y-3.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-[10px] font-black font-mono px-2.5 py-1 rounded-xl border-2 border-amber-300/40 bg-amber-300/10 text-amber-200 shadow-3xs">
+                      LIFE EDUCATION QUEST
+                    </span>
+                    <span className="text-[10px] font-black px-2.5 py-1 rounded-xl border-2 border-emerald-300/40 bg-emerald-300/10 text-emerald-200">
+                      六個單元・對應課本
+                    </span>
+                  </div>
+
+                  <h4 className="text-2xl md:text-3xl font-black text-amber-100 tracking-wide leading-snug group-hover:text-amber-200 transition-colors">
+                    五門・心靈迷宮
+                  </h4>
+
+                  <p className="text-xs md:text-sm text-slate-300 font-bold leading-relaxed max-w-xl">
+                    可華掉進一座心靈迷宮，裡面矗立著五扇高聳的大門。每一扇門都要把散落的
+                    思考碎片排成一條論證的順序，才能鑄出鑰匙。五扇門對應課綱的五大核心素養。
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 pt-0.5">
+                    {['推理鑄鑰', '課本單元', '迷障圖鑑', '每日思辨', '心象探索'].map(t => (
+                      <span
+                        key={t}
+                        className="text-[10px] md:text-xs font-black px-2.5 py-1 rounded-xl bg-white/5 border border-white/10 text-slate-300"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="pt-2">
+                    <span className="inline-flex items-center gap-1.5 px-5 py-2 rounded-2xl bg-[#E65100] text-white text-sm font-black shadow-md group-hover:bg-[#F57C00] transition-colors">
+                      開始遊戲 <ChevronRight className="w-4 h-4" />
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div className="space-y-2">
-                <h4 className="text-lg md:text-xl font-black text-[#3E2723]">原 10 款舊版遊戲已全數刪除</h4>
-                <p className="text-xs md:text-sm text-[#7D5C43] font-bold max-w-lg mx-auto leading-relaxed">
-                  遊戲庫目前已清空重置，隨時準備為您建立並更換全新的互動遊戲！
-                </p>
-              </div>
-            </div>
+            </button>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 md:gap-6">
               {(() => {

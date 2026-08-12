@@ -1,0 +1,65 @@
+name: Deploy to GitHub Pages
+
+# 注意：這個專案有 server.ts（Express + Gemini API + 頭像上傳），
+# GitHub Pages 只能放靜態檔案，跑不了那些。所以線上版是「靜態版」：
+#   ・能用：課本單元、互動遊戲、五門・心靈迷宮、學習紀錄
+#          （資料存在各自裝置的 localStorage，前端本來就有這條退路）
+#   ・不能用：/api/state 的跨裝置共用、AI 批改與對話、頭像上傳
+# 之後要全功能，把這個 repo 部署到能跑 Node 的平台即可，程式不用改。
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同時只跑一個部署，後推的取代前一個
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 這個專案沒有 package-lock.json，所以用 npm install 而不是 npm ci
+      - name: 安裝套件
+        run: npm install
+
+      # 型別檢查只是提醒，不擋部署
+      - name: 型別檢查（不擋部署）
+        run: npm run lint
+        continue-on-error: true
+
+      # 只建前端。package.json 的 build 還會用 esbuild 打包 server.ts，
+      # 那是給 Node 平台用的，靜態部署不需要，所以這裡直接叫 vite build。
+      # GitHub Pages 專案站台在 /<repo>/ 子路徑底下，要用 --base 帶進去。
+      - name: 建置前端
+        run: npx vite build --base=/-0811-0234/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

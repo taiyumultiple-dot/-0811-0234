@@ -41,6 +41,7 @@ import { ACHIEVEMENTS } from './achievements';
 import AuthScreen from './components/AuthScreen';
 import SafeImageAvatar from './components/SafeImageAvatar';
 import WelcomeTour from './components/WelcomeTour';
+import FiveGatesGame from './components/FiveGatesGame';
 import charKehuaImg from './assets/images/characters/char_kehua.jpg';
 import charBojunImg from './assets/images/characters/char_bojun.jpg';
 import charXiaowenImg from './assets/images/characters/char_xiaowen.jpg';
@@ -110,6 +111,8 @@ export default function App() {
   });
 
   const [isLoaded, setIsLoaded] = useState(false);
+  // 《五門・心靈迷宮》開著的時候用全螢幕蓋住平台，關掉就回到原本的畫面
+  const [showFiveGates, setShowFiveGates] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalTab, setAuthModalTab] = useState<'student_login' | 'teacher_login' | 'register'>('student_login');
   const [showTour, setShowTour] = useState(false);
@@ -676,6 +679,7 @@ export default function App() {
                   setShowAuthModal(true);
                 }}
                 onLogout={handleLogout}
+                onOpenFiveGates={() => setShowFiveGates(true)}
               />
             )}
 
@@ -907,6 +911,9 @@ export default function App() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* 《五門・心靈迷宮》：全螢幕蓋住平台，關掉就回到剛才的分頁 */}
+      {showFiveGates && <FiveGatesGame onClose={() => setShowFiveGates(false)} />}
 
       {/* Interactive Walkthrough / Tour Guide */}
       <WelcomeTour
