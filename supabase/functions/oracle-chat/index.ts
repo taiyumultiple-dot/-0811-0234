@@ -100,7 +100,17 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { mode, date, signName, traits, history, message, question, cards } = await req.json();
+    const { mode, date, signName, traits, history, message, question, cards, angle } =
+      await req.json();
+
+    /* 「重新解讀」會換一個角度重讀同一組牌，四種輪流。
+       這一段跟遊戲端 js/game/aichat.js 的 ANGLE_TEXT 對應。 */
+    const ANGLE_HINT: Record<string, string> = {
+      default: "",
+      other: "這一次從對方的角度讀：把三張牌讀成「對方那一邊可能發生了什麼」。要說清楚這是牌面反映的可能性，不是事實。",
+      self: "這一次把焦點完全收回提問者自己身上：不談別人怎麼想，只談他自己的模式、感受與需要練的事。",
+      timing: "這一次從時機與節奏讀：什麼已經過去、什麼現在適合做、什麼還不到時候。不要給具體日期。",
+    };
 
     if (mode === "tarot") {
       const cardText = (cards ?? []).map((c: Record<string, string>, i: number) =>
@@ -118,7 +128,12 @@ Deno.serve(async (req) => {
 
 ${cardText}
 
+${ANGLE_HINT[angle as string] ?? ""}
+
 請寫一份解牌報告，用 JSON 回覆：
+
+・title：一句意象化的標題，12 到 20 字，像一句詩。要抓到這三張牌合起來的走向，
+  不要出現牌名。
 
 ・opening：兩三句開場，說明這三張牌合起來反映出什麼樣的能量或訊息，
   並點出接下來會怎麼分析。
@@ -151,6 +166,7 @@ ${cardText}
           responseSchema: {
             type: "OBJECT",
             properties: {
+              title: { type: "STRING" },
               opening: { type: "STRING" },
               cards: {
                 type: "ARRAY",
@@ -170,7 +186,7 @@ ${cardText}
               advice: { type: "STRING" },
               ask: { type: "STRING" },
             },
-            required: ["opening", "cards", "conclusion", "advice", "ask"],
+            required: ["title", "opening", "cards", "conclusion", "advice", "ask"],
           },
         },
       });
