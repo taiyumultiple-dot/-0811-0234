@@ -408,7 +408,7 @@ export default function HomeTab({
                   </div>
 
                   <h4 className="text-2xl md:text-3xl font-black text-amber-100 tracking-wide leading-snug group-hover:text-amber-200 transition-colors">
-                    五門・心靈迷宮
+                    打開幸福人生之門・心靈迷宮
                   </h4>
 
                   <p className="text-xs md:text-sm text-slate-300 font-bold leading-relaxed max-w-xl">

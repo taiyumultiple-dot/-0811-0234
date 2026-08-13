@@ -34,7 +34,7 @@ export default function FiveGatesGame({ onClose }: { onClose?: () => void }) {
           <Home className="w-3.5 h-3.5" /> 返回平台
         </button>
         <div className="text-amber-200 text-xs font-black tracking-widest">
-          五門・心靈迷宮
+          打開幸福人生之門・心靈迷宮
         </div>
         <button
           onClick={goFullscreen}
@@ -53,7 +53,7 @@ export default function FiveGatesGame({ onClose }: { onClose?: () => void }) {
         <iframe
           // ?bgm=1：平台自己沒有背景音樂，所以請遊戲照常播它自己的
           src={`${import.meta.env.BASE_URL}lifequest/index.html?bgm=1`}
-          title="五門・心靈迷宮"
+          title="打開幸福人生之門・心靈迷宮"
           className="w-full h-full border-0"
           allow="autoplay; fullscreen"
           onLoad={() => setLoaded(true)}
