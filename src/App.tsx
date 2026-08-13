@@ -643,12 +643,16 @@ export default function App() {
           <GlobalHeaderBanner onNavigate={handleTabSelection} />
         )}
 
-        <AnimatePresence mode="wait">
+        {/* 這裡原本包 <AnimatePresence mode="wait"> 做換頁淡入淡出，但它會卡住：
+            離開中的那一頁停在 opacity:0 不卸載，mode="wait" 又要等它卸載才肯掛
+            下一頁，結果按「課本單元」整個內容區變成一片空白（元素在、但透明）。
+            換成單純的 motion.div：key 一變就重新播進場動畫，沒有離場那一段，
+            就不會卡。淡入的效果一樣有。 */}
+        <div>
           <motion.div
             key={activeTab + '-' + role + '-' + activeStudentId}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
             {activeTab === '首頁' && (
@@ -761,7 +765,7 @@ export default function App() {
               />
             )}
           </motion.div>
-        </AnimatePresence>
+        </div>
       </main>
 
       {/* 底部導覽列與「更多」抽屜都拿掉了：導覽改成頁首那一排橫的，
