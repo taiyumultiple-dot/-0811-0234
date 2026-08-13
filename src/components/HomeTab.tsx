@@ -292,78 +292,7 @@ export default function HomeTab({
 
 
 
-        {/* 4. "選擇單元" Section - Matches reference image EXACTLY */}
-        <div id="select-unit-section" className="bg-[#FCFAF6] rounded-3xl border-2 border-[#F1E0CE] p-6 md:p-8 shadow-sm space-y-6">
-          
-          <div className="flex items-center justify-between border-b-2 border-[#F1E0CE]/80 pb-4">
-            <div className="flex items-center gap-2.5">
-              {/* Elegant orange star logo */}
-              <svg className="w-6 h-6 text-[#E65100]" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9Z" />
-              </svg>
-              <h3 className="text-xl md:text-2xl font-black text-[#3E2723]">選擇單元</h3>
-            </div>
-          </div>
-
-          {/* Grid layout for 6 custom-styled unit cards with clear spacing and large readable text */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 md:gap-5">
-            {unitCards.map((unit) => (
-              <div
-                key={unit.id}
-                onClick={() => handleUnitClick(unit.id)}
-                className={`p-5 md:p-6 rounded-3xl border-2 ${unit.colorClasses.border} ${unit.colorClasses.cardBg} ${unit.colorClasses.hoverBg} transition-all duration-300 cursor-pointer shadow-3xs hover:shadow-md flex flex-col justify-between items-center text-center min-h-[270px] md:min-h-[290px] group`}
-              >
-                {/* Rounded Icon badge container with soft colored background circle */}
-                <div className={`w-16 h-16 rounded-full ${unit.colorClasses.circleBg} flex items-center justify-center shadow-2xs group-hover:scale-105 transition-transform shrink-0`}>
-                  {unit.iconSvg}
-                </div>
-
-                <div className="space-y-2 my-3 flex-1 flex flex-col justify-center w-full">
-                  {unit.id === 'unit_00' ? (
-                    <>
-                      {/* Big Title text: "總說" */}
-                      <h4 className="font-black text-xl md:text-2xl text-[#C48C46] tracking-wide">
-                        {unit.num}
-                      </h4>
-                      {/* Subtitle: "| 凝視生命的地圖" */}
-                      <p className="text-xs md:text-sm text-[#4E3629] leading-snug font-black">
-                        {unit.subtitle}
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      {/* Big Number: e.g. "01" */}
-                      <span className={`text-2xl md:text-3xl font-black ${unit.colorClasses.accentText} tracking-wider font-mono`}>
-                        {unit.num}
-                      </span>
-                      {/* Title text: "哲學思考" */}
-                      <h4 className="font-black text-base md:text-lg text-[#2D1B10] leading-snug">
-                        {unit.title}
-                      </h4>
-                      {/* Subtitle text: "品嚐思考的樂趣" */}
-                      <p className="text-xs md:text-sm text-[#5C4033] leading-snug font-extrabold mt-0.5">
-                        {unit.subtitle}
-                      </p>
-                    </>
-                  )}
-                </div>
-
-                {/* View content interactive button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleUnitClick(unit.id);
-                  }}
-                  className={`w-full py-2 border-2 ${unit.colorClasses.btnBorder} rounded-2xl text-xs md:text-sm font-black ${unit.colorClasses.accentText} bg-white hover:bg-slate-50 transition-all shadow-2xs cursor-pointer active:scale-98`}
-                >
-                  查看內容
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 4.5. "課堂專用互動遊戲" Section */}
+        {/* 4. "課堂專用互動遊戲" Section — 排在「選擇單元」上面 */}
         <div id="interactive-games-section" className="bg-[#FCFAF6] rounded-3xl border-2 border-[#F1E0CE] p-6 md:p-8 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-[#F1E0CE]/80 pb-4 gap-3">
             <div className="flex items-center gap-2.5">
@@ -512,6 +441,77 @@ export default function HomeTab({
               })()}
             </div>
           )}
+        </div>
+
+        {/* 5. "選擇單元" Section - Matches reference image EXACTLY */}
+        <div id="select-unit-section" className="bg-[#FCFAF6] rounded-3xl border-2 border-[#F1E0CE] p-6 md:p-8 shadow-sm space-y-6">
+          
+          <div className="flex items-center justify-between border-b-2 border-[#F1E0CE]/80 pb-4">
+            <div className="flex items-center gap-2.5">
+              {/* Elegant orange star logo */}
+              <svg className="w-6 h-6 text-[#E65100]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9Z" />
+              </svg>
+              <h3 className="text-xl md:text-2xl font-black text-[#3E2723]">選擇單元</h3>
+            </div>
+          </div>
+
+          {/* Grid layout for 6 custom-styled unit cards with clear spacing and large readable text */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 md:gap-5">
+            {unitCards.map((unit) => (
+              <div
+                key={unit.id}
+                onClick={() => handleUnitClick(unit.id)}
+                className={`p-5 md:p-6 rounded-3xl border-2 ${unit.colorClasses.border} ${unit.colorClasses.cardBg} ${unit.colorClasses.hoverBg} transition-all duration-300 cursor-pointer shadow-3xs hover:shadow-md flex flex-col justify-between items-center text-center min-h-[270px] md:min-h-[290px] group`}
+              >
+                {/* Rounded Icon badge container with soft colored background circle */}
+                <div className={`w-16 h-16 rounded-full ${unit.colorClasses.circleBg} flex items-center justify-center shadow-2xs group-hover:scale-105 transition-transform shrink-0`}>
+                  {unit.iconSvg}
+                </div>
+
+                <div className="space-y-2 my-3 flex-1 flex flex-col justify-center w-full">
+                  {unit.id === 'unit_00' ? (
+                    <>
+                      {/* Big Title text: "總說" */}
+                      <h4 className="font-black text-xl md:text-2xl text-[#C48C46] tracking-wide">
+                        {unit.num}
+                      </h4>
+                      {/* Subtitle: "| 凝視生命的地圖" */}
+                      <p className="text-xs md:text-sm text-[#4E3629] leading-snug font-black">
+                        {unit.subtitle}
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      {/* Big Number: e.g. "01" */}
+                      <span className={`text-2xl md:text-3xl font-black ${unit.colorClasses.accentText} tracking-wider font-mono`}>
+                        {unit.num}
+                      </span>
+                      {/* Title text: "哲學思考" */}
+                      <h4 className="font-black text-base md:text-lg text-[#2D1B10] leading-snug">
+                        {unit.title}
+                      </h4>
+                      {/* Subtitle text: "品嚐思考的樂趣" */}
+                      <p className="text-xs md:text-sm text-[#5C4033] leading-snug font-extrabold mt-0.5">
+                        {unit.subtitle}
+                      </p>
+                    </>
+                  )}
+                </div>
+
+                {/* View content interactive button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleUnitClick(unit.id);
+                  }}
+                  className={`w-full py-2 border-2 ${unit.colorClasses.btnBorder} rounded-2xl text-xs md:text-sm font-black ${unit.colorClasses.accentText} bg-white hover:bg-slate-50 transition-all shadow-2xs cursor-pointer active:scale-98`}
+                >
+                  查看內容
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
 

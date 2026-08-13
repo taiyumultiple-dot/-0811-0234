@@ -121,11 +121,12 @@ export default function AuthScreen({
     onLoginSuccess(newUser);   // 註冊完直接進去，不用再登入一次
   };
 
-  // 體驗帳號：四位學生 + 一位老師，順序固定
+  // 體驗帳號只留兩個：一個學生（陳可華）、一個老師。
+  // 原本五個人排一整列，示範時反而要先想「該點哪一個」，兩個就夠了。
+  // 其他帳號（xiaoping / bojun / xiaowen）還在，只是不列在這裡，
+  // 要用的話一樣可以打帳號密碼登入。
   const demoUsers = [
-    ...registeredUsers.filter(
-      u => u.role === 'student' && ['kehua', 'xiaoping', 'bojun', 'xiaowen'].includes(u.username)
-    ),
+    ...registeredUsers.filter(u => u.role === 'student' && u.username === 'kehua'),
     ...registeredUsers.filter(u => u.role === 'teacher' && u.username === 'teacher')
   ];
 
@@ -220,23 +221,23 @@ export default function AuthScreen({
                   <ChevronDown className={`w-4 h-4 transition-transform ${showQuick ? 'rotate-180' : ''}`} />
                 </button>
 
-                {/* 尺寸抓得剛好讓五個人在 375px 的手機上排成一列，不會落單 */}
+                {/* 只有兩個人，就排寬一點、看得清楚一點 */}
                 {showQuick && (
-                  <div className="flex flex-wrap justify-center gap-2 pt-3">
+                  <div className="flex justify-center gap-4 pt-3">
                     {demoUsers.map(u => (
                       <button
                         key={u.id}
                         type="button"
                         onClick={() => onLoginSuccess(u)}
                         title={`以 ${u.name} 的身分進入`}
-                        className="flex flex-col items-center gap-1.5 w-12 group cursor-pointer"
+                        className="flex flex-col items-center gap-1.5 w-20 group cursor-pointer"
                       >
                         <img
                           src={characterImages[u.username] || charKehuaImg}
                           alt=""
-                          className="w-10 h-10 rounded-full object-cover border-2 border-[#E9D6BF] group-hover:border-[#E65100] transition-colors"
+                          className="w-14 h-14 rounded-full object-cover border-2 border-[#E9D6BF] group-hover:border-[#E65100] transition-colors"
                         />
-                        <span className="text-[11px] font-bold text-[#5D4037] leading-none truncate w-full text-center">
+                        <span className="text-xs font-bold text-[#5D4037] leading-none truncate w-full text-center">
                           {u.name}
                         </span>
                       </button>
