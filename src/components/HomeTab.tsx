@@ -292,12 +292,12 @@ export default function HomeTab({
 
 
 
-        {/* 4. "課堂專用互動遊戲" Section — 排在「選擇單元」上面 */}
+        {/* 4. "互動遊戲" Section — 排在「選擇單元」上面 */}
         <div id="interactive-games-section" className="bg-[#FCFAF6] rounded-3xl border-2 border-[#F1E0CE] p-6 md:p-8 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-[#F1E0CE]/80 pb-4 gap-3">
             <div className="flex items-center gap-2.5">
               <Gamepad2 className="w-6 h-6 text-[#E65100]" />
-              <h3 className="text-xl md:text-2xl font-black text-[#3E2723]">課堂專用互動遊戲</h3>
+              <h3 className="text-xl md:text-2xl font-black text-[#3E2723]">互動遊戲</h3>
             </div>
             
             <button
