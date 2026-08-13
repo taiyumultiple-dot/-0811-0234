@@ -5,24 +5,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Sparkles, 
-  BookOpen, 
-  UserCheck, 
-  Map, 
-  GraduationCap, 
-  Award, 
-  Compass, 
-  FileText, 
-  X, 
-  ChevronRight, 
+import {
+  BookOpen,
+  UserCheck,
+  Map,
+  GraduationCap,
+  Compass,
+  FileText,
+  X,
+  ChevronRight,
   ChevronLeft,
-  CheckCircle,
-  HelpCircle,
-  Target,
-  MessageSquare,
-  Gamepad2,
-  QrCode
+  Gamepad2
 } from 'lucide-react';
 import { UserProfile } from '../types';
 
@@ -67,39 +60,50 @@ export default function WelcomeTour({
 
   if (!isOpen) return null;
 
-  // 1. TOUR STEPS FOR UNLOGGED-IN VISITORS (GUEST TOUR) - MUCH BIGGER FONTS
+  /* ==========================================================================
+     導覽內容
+     ---------------------------------------------------------------------------
+     這裡寫的每一句都要跟平台現況對得上。2026-08-13 重寫過一次，因為舊版
+     還在介紹已經不存在的東西（10 款小遊戲、WOOP 成長表單、關鍵字牆），
+     單元 05 的名字也是錯的。改內容之前先確認：
+       ・導覽列真正有哪些分頁 → App.tsx 的 navItems
+       ・六個單元的正式名稱   → HomeTab.tsx 的 unitCards
+       ・遊戲現在有幾款       → HomeTab.tsx 的 GAMES（目前是 0，只剩心靈迷宮）
+     ========================================================================== */
+
+  // 1. 未登入訪客看到的導覽
   const guestSteps: TourStep[] = [
     {
-      title: '歡迎探索生命教育互動平台',
-      subtitle: '開啟一段與生命的深度對話',
-      description: '這是一套專門為高中生命教育設計的數位互動學習系統。透過課本故事、思辨遊戲、生活實踐與多元成長表單，引導學生在有趣的任務中思索生命的終極意義。',
+      title: '歡迎來到泰宇生命教育互動平台',
+      subtitle: '課本、遊戲、紀錄，都在同一個地方',
+      description: '這是為高中生命教育設計的數位學習平台。六個單元的數位課本、一款走完就會把課本主題想過一遍的推理遊戲，還有會把你寫下的每一句話留起來的學習紀錄。不用登入也可以先逛一圈。',
       badge: '首頁啟航',
       badgeBg: 'bg-orange-50',
       badgeText: 'text-orange-600 border-orange-200',
       icon: Compass,
       iconColor: 'text-orange-500',
       graphic: (
-        <div className="relative w-full h-44 bg-gradient-to-br from-[#FFF8F0] to-[#FFF1E0] rounded-2xl border-2 border-orange-150 flex items-center justify-center overflow-hidden p-6">
+        <div className="relative w-full h-44 bg-gradient-to-br from-[#FFF8F0] to-[#FFF1E0] rounded-2xl border-2 border-orange-100 flex items-center justify-center overflow-hidden p-6">
           <div className="absolute top-2 left-2 w-16 h-16 bg-orange-300/10 rounded-full blur-xl" />
           <div className="absolute bottom-2 right-2 w-24 h-24 bg-amber-400/10 rounded-full blur-2xl" />
           <div className="text-center space-y-3 z-10">
-            <div className="inline-flex p-3 bg-white rounded-full shadow-lg text-orange-500 animate-bounce">
-              <Compass className="w-12 h-12" />
+            <div className="inline-flex p-3 bg-white rounded-full shadow-lg text-orange-500">
+              <Compass className="w-11 h-11" />
             </div>
-            <p className="text-sm font-black text-[#5D4037]">✨ 泰宇生命教育 ‧ 行動學習地圖 ✨</p>
+            <p className="text-sm font-black text-[#5D4037]">泰宇生命教育 ‧ 行動學習地圖</p>
             <div className="flex gap-2 justify-center">
-              <span className="text-xs bg-orange-500 text-white font-black px-2.5 py-1 rounded-md">哲學思考</span>
-              <span className="text-xs bg-amber-500 text-white font-black px-2.5 py-1 rounded-md">人學探索</span>
-              <span className="text-xs bg-rose-500 text-white font-black px-2.5 py-1 rounded-md">終極關懷</span>
+              <span className="text-xs bg-orange-500 text-white font-black px-2.5 py-1 rounded-md">數位課本</span>
+              <span className="text-xs bg-amber-500 text-white font-black px-2.5 py-1 rounded-md">心靈迷宮</span>
+              <span className="text-xs bg-rose-500 text-white font-black px-2.5 py-1 rounded-md">學習紀錄</span>
             </div>
           </div>
         </div>
       )
     },
     {
-      title: '精心設計的六大單元課程',
-      subtitle: '從凝視生命地圖開始出發',
-      description: '首頁展示了完整的課程架構，包含：總說（凝視生命地圖）、單元1（哲學思考）、單元2（人學探索）、單元3（終極關懷）、單元4（價值思辨）、與單元5（身體與科技）。點擊即可進入數位課本世界！',
+      title: '六個單元，對應你手上的課本',
+      subtitle: '總說，加上五個核心素養',
+      description: '從「總說：凝視生命的地圖」開始，接著是哲學思考、人學探索、終極關懷、價值思辨，最後是靈性修養與人格統整。在首頁的「選擇單元」點任何一張卡的「查看內容」，就會進到那個單元的數位課本。',
       badge: '單元架構',
       badgeBg: 'bg-amber-50',
       badgeText: 'text-amber-600 border-amber-200',
@@ -107,19 +111,20 @@ export default function WelcomeTour({
       iconColor: 'text-amber-500',
       graphic: (
         <div className="w-full h-44 bg-slate-50 rounded-2xl border-2 border-slate-100 p-4 flex flex-col justify-center space-y-3">
-          <span className="text-xs font-black text-slate-500 uppercase tracking-wider block text-center">單元快速選擇導覽</span>
+          <span className="text-xs font-black text-slate-500 tracking-wider block text-center">六個單元</span>
           <div className="grid grid-cols-3 gap-2">
             {[
-              { id: '總說', icon: '📖', color: 'bg-[#FFF0DF] border-[#F1E0CE] text-[#C48C46]' },
-              { id: '01', icon: '💡', color: 'bg-[#E5F1FF] border-[#CCE1FB] text-[#1D4ED8]' },
-              { id: '02', icon: '🔍', color: 'bg-[#EAF7EA] border-[#CDE7CD] text-[#2E7D32]' },
-              { id: '03', icon: '🧭', color: 'bg-[#FFF0F5] border-[#FCDCE6] text-[#D81B60]' },
-              { id: '04', icon: '⚖️', color: 'bg-[#F3E8FF] border-[#E9D5FF] text-[#7E22CE]' },
-              { id: '05', icon: '🎨', color: 'bg-[#FFF1F2] border-[#FECDD3] text-[#BE123C]' }
+              { id: '總說', name: '生命地圖', icon: '📖', color: 'bg-[#FFF0DF] border-[#F1E0CE] text-[#C48C46]' },
+              { id: '01', name: '哲學思考', icon: '💡', color: 'bg-[#E5F1FF] border-[#CCE1FB] text-[#1D4ED8]' },
+              { id: '02', name: '人學探索', icon: '🔍', color: 'bg-[#EAF7EA] border-[#CDE7CD] text-[#2E7D32]' },
+              { id: '03', name: '終極關懷', icon: '🧭', color: 'bg-[#FFF0F5] border-[#FCDCE6] text-[#D81B60]' },
+              { id: '04', name: '價值思辨', icon: '⚖️', color: 'bg-[#F3E8FF] border-[#E9D5FF] text-[#7E22CE]' },
+              { id: '05', name: '靈性修養', icon: '🕯️', color: 'bg-[#FFF1F2] border-[#FECDD3] text-[#BE123C]' }
             ].map((u) => (
               <div key={u.id} className={`flex flex-col items-center p-2 rounded-xl border-2 ${u.color} shadow-xs`}>
-                <span className="text-xl">{u.icon}</span>
-                <span className="text-xs font-black">{u.id}</span>
+                <span className="text-lg leading-none">{u.icon}</span>
+                <span className="text-[11px] font-black mt-1">{u.id}</span>
+                <span className="text-[10px] font-bold opacity-70">{u.name}</span>
               </div>
             ))}
           </div>
@@ -127,126 +132,133 @@ export default function WelcomeTour({
       )
     },
     {
-      title: '互動遊戲 ‧ 班級同樂大廳',
-      subtitle: '10 款生命教育主題小遊戲，課堂立即開玩',
-      description: '「互動遊戲」分頁準備了 10 款主題遊戲：心理測驗 MBTI、生命拼圖地圖、情境選擇大冒險、人際關係連連看、價值天平排序戰、生命故事翻翻卡、感恩泡泡站、哲學辯論快攻、心情溫度計、成長徽章挑戰賽。老師掃描班級 QR Code 讓學生加入，就能一起同步進行課堂遊戲！',
-      badge: '互動遊戲',
+      title: '心靈迷宮：走完就把課本想過一遍',
+      subtitle: '五扇門，一扇對應一個核心素養',
+      description: '首頁最上面那張黑底卡片點下去就開始。每一關先看一段劇情，接著用「心象測驗」問自己幾個沒有對錯的問題，然後把散落的思考碎片排成一條論證的順序、鑄出鑰匙開門。過關後寫下你的反思，那一關的角色會回你一段話。',
+      badge: '心靈迷宮',
       badgeBg: 'bg-orange-50',
       badgeText: 'text-orange-600 border-orange-200',
       icon: Gamepad2,
       iconColor: 'text-orange-500',
       graphic: (
-        <div className="w-full h-44 bg-white rounded-2xl border-2 border-slate-100 p-4 flex flex-col justify-between">
-          <div className="flex items-center justify-between border-b-2 border-slate-50 pb-2">
-            <span className="text-xs font-bold text-slate-500 flex items-center gap-1.5"><QrCode className="w-3.5 h-3.5" /> 班級代碼 4A28</span>
-            <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full">已加入 32/40</span>
+        <div className="w-full h-44 bg-[#0B1220] rounded-2xl border-2 border-amber-500/25 p-4 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-black font-mono px-2 py-0.5 rounded-lg border border-amber-300/40 bg-amber-300/10 text-amber-200">
+              LIFE EDUCATION QUEST
+            </span>
+            <span className="text-[10px] font-bold text-slate-400">五扇門</span>
           </div>
-          <div className="grid grid-cols-5 gap-1.5 py-2">
-            {['MBTI', '🧩', '🧭', '🕸️', '⚖️', '🎴', '🧼', '🗣️', '🌡️', '🏆'].map((label, idx) => (
-              <div key={idx} className="aspect-square rounded-lg bg-orange-50 border border-orange-100 flex items-center justify-center text-[10px] font-black text-orange-600">
-                {idx < 9 ? label : label}
+          <div className="flex justify-center gap-1.5">
+            {['哲學', '人學', '關懷', '價值', '靈性'].map((g, i) => (
+              <div key={g} className={`flex-1 rounded-lg border py-2 text-center ${i === 0 ? 'border-amber-400/60 bg-amber-400/10' : 'border-white/10 bg-white/5'}`}>
+                <div className={`text-base leading-none ${i === 0 ? 'text-amber-300' : 'text-slate-500'}`}>⌘</div>
+                <div className={`text-[10px] font-bold mt-1 ${i === 0 ? 'text-amber-200' : 'text-slate-500'}`}>{g}</div>
               </div>
             ))}
           </div>
-          <p className="text-[11px] font-bold text-slate-400 text-center">共 10 款課堂專用互動遊戲</p>
+          <p className="text-[10.5px] font-bold text-slate-400 text-center leading-relaxed">
+            劇情 → 心象測驗 → 鑄鑰開門 → 反思，角色會回你的話
+          </p>
         </div>
       )
     },
     {
-      title: '專屬學生入口 ‧ 扮演生命角色',
-      subtitle: '與課本中的學習夥伴一同成長',
-      description: '點擊「學生入口」登入。平台內置多位各具性格的預設學生角色（陳可華、王博鈞、王小文、張曉萍）。登入後，你將化身其中一位夥伴，一邊閱讀他們的生命故事，一邊寫下你自己的思辨解答。',
-      badge: '學生角色',
+      title: '登入之後，寫的東西才留得住',
+      subtitle: '課堂體驗帳號免密碼，點頭像就進去',
+      description: '按右上角的「登入系統」。展開下面的「課堂體驗帳號」，有兩個免密碼的角色可以直接點：學生陳可華、老師林老師。其他角色（王小文、王博鈞、張曉萍）一樣能用，帳號就是他們的英文名、密碼都是 123。',
+      badge: '登入系統',
       badgeBg: 'bg-blue-50',
       badgeText: 'text-blue-600 border-blue-200',
       icon: UserCheck,
       iconColor: 'text-blue-500',
       graphic: (
-        <div className="w-full h-44 bg-gradient-to-tr from-[#F0F7FF] to-[#E5F1FF] rounded-2xl border-2 border-blue-100 p-4 flex items-center justify-around">
-          {[
-            { name: '陳可華', role: '熱血少年', emoji: '👦🏻', bg: 'bg-amber-100' },
-            { name: '張曉萍', role: '氣質少女', emoji: '👩🏻', bg: 'bg-rose-100' },
-            { name: '王博鈞', role: '體育健將', emoji: '🏀', bg: 'bg-blue-100' }
-          ].map((item, idx) => (
-            <div key={idx} className="flex flex-col items-center bg-white p-2.5 rounded-2xl shadow-xs border-2 border-blue-50 w-24">
-              <div className={`w-12 h-12 rounded-full ${item.bg} flex items-center justify-center text-xl font-bold mb-1.5 border border-white/80 shadow-md`}>
-                {item.emoji}
+        <div className="w-full h-44 bg-gradient-to-tr from-[#F0F7FF] to-[#E5F1FF] rounded-2xl border-2 border-blue-100 p-4 flex flex-col items-center justify-center gap-3">
+          <span className="text-xs font-black text-slate-500">課堂體驗帳號（免密碼）</span>
+          <div className="flex items-center justify-center gap-6">
+            {[
+              { name: '陳可華', role: '學生', emoji: '👦🏻', bg: 'bg-amber-100' },
+              { name: '林老師', role: '老師', emoji: '👩🏻‍🏫', bg: 'bg-indigo-100' }
+            ].map((item) => (
+              <div key={item.name} className="flex flex-col items-center bg-white p-3 rounded-2xl shadow-xs border-2 border-blue-50 w-24">
+                <div className={`w-12 h-12 rounded-full ${item.bg} flex items-center justify-center text-2xl mb-1.5 border border-white/80 shadow-md`}>
+                  {item.emoji}
+                </div>
+                <span className="text-sm font-black text-slate-800">{item.name}</span>
+                <span className="text-[11px] font-bold text-slate-400 mt-0.5">{item.role}</span>
               </div>
-              <span className="text-sm font-black text-slate-800">{item.name}</span>
-              <span className="text-xs font-bold text-slate-400 mt-0.5">{item.role}</span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )
     },
     {
-      title: '教師評閱與深度引導端',
-      subtitle: '一對一的靈魂對話與統計分析',
-      description: '老師可以使用預設帳號 teacher / 密碼 123 登入。教師端能即時觀看全班的「學習統計圖表」、各單元閱讀覆蓋率，並針對學生的 WOOP 成長表單、思辨遊戲成果進行最即時的線上給分與引導評語。',
-      badge: '教師後台',
+      title: '老師登入後會多兩個分頁',
+      subtitle: '學習紀錄、課堂工具箱、學習統計',
+      description: '用帳號 teacher、密碼 123 登入（或直接點「林老師」）。導覽列會多出「工具箱」和「學習統計」：學習紀錄看得到全班每個單元的進度，工具箱有隨機抽人這類上課現場會用到的小工具，學習統計是整班的完成度圖表。',
+      badge: '教師端',
       badgeBg: 'bg-indigo-50',
       badgeText: 'text-indigo-600 border-indigo-200',
       icon: GraduationCap,
       iconColor: 'text-indigo-500',
       graphic: (
-        <div className="w-full h-44 bg-slate-900 text-slate-100 rounded-2xl border-2 border-slate-800 p-4 flex flex-col justify-between font-mono text-xs">
-          <div className="flex items-center justify-between border-b-2 border-slate-800 pb-1.5">
-            <span className="font-extrabold text-[#EA9A3E] flex items-center gap-1">👩🏻‍🏫 教師評閱工作區</span>
-            <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded">系統就緒</span>
+        <div className="w-full h-44 bg-slate-900 text-slate-100 rounded-2xl border-2 border-slate-800 p-4 flex flex-col justify-between text-xs">
+          <div className="flex items-center justify-between border-b-2 border-slate-800 pb-2">
+            <span className="font-extrabold text-[#EA9A3E]">👩🏻‍🏫 林老師 ‧ 教師端</span>
+            <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded font-bold">已登入</span>
           </div>
-          <div className="space-y-1.5 text-slate-300">
-            <div className="flex justify-between border-b border-slate-800/40 pb-1">
-              <span>📊 課程地圖總讀完率：</span>
-              <span className="text-amber-400 font-bold">85.4%</span>
-            </div>
-            <div className="flex justify-between border-b border-slate-800/40 pb-1">
-              <span>📝 已提交思辨任務數：</span>
-              <span className="text-indigo-400 font-bold">24 件</span>
-            </div>
-            <div className="flex justify-between">
-              <span>📬 待批改 WOOP 表單：</span>
-              <span className="text-rose-400 font-bold">3 件</span>
-            </div>
+          <div className="flex gap-2">
+            {[
+              { n: '學習紀錄', d: '全班進度' },
+              { n: '工具箱', d: '隨機抽人' },
+              { n: '學習統計', d: '完成度圖表' }
+            ].map(t => (
+              <div key={t.n} className="flex-1 bg-slate-800/70 border border-slate-700/60 rounded-xl p-2 text-center">
+                <div className="font-black text-slate-100 text-[11px]">{t.n}</div>
+                <div className="text-[10px] text-slate-400 mt-0.5">{t.d}</div>
+              </div>
+            ))}
           </div>
-          <div className="bg-slate-800/80 p-1.5 rounded text-slate-300 border border-slate-700/50 leading-relaxed text-[11px]">
-            林老師評語：「可華寫得很好！看見你對未來的實踐計畫非常周詳，加油！」
-          </div>
+          <p className="text-[10.5px] text-slate-400 text-center font-bold">
+            帳號 teacher ／ 密碼 123
+          </p>
         </div>
       )
     }
   ];
 
-  // 2. TOUR STEPS FOR LOGGED-IN USERS (USER MEMBER TOUR) - MUCH BIGGER FONTS
+  // 2. 已登入的人看到的導覽
+  const isTeacherUser = currentUser?.role === 'teacher';
+
   const userSteps: TourStep[] = [
     {
       title: `歡迎回來，${currentUser?.name || '學習者'}！`,
-      subtitle: '踏上專屬的生命反思旅程',
-      description: '太棒了！你已成功進入你的專屬學習空間。在這裡，你的所有學習足跡，包括數位課本閱讀進度、思辨問卷提交、以及獲取的勳章，都將會完美儲存。讓我們先來了解如何使用這個平台吧！',
-      badge: '個人化空間',
+      subtitle: '從這裡開始都會被記下來',
+      description: '你已經進到自己的空間了。接下來讀的課本進度、在遊戲裡寫的反思、每一次的作答，都會存進你的帳號，換一台電腦登入一樣看得到。',
+      badge: '個人空間',
       badgeBg: 'bg-orange-50',
       badgeText: 'text-orange-600 border-orange-200',
       icon: Compass,
       iconColor: 'text-orange-500',
       graphic: (
         <div className="w-full h-44 bg-gradient-to-br from-[#FFF9F2] to-[#FFF1E0] rounded-2xl border-2 border-orange-100 flex items-center gap-4 p-5">
-          <div className="w-20 h-20 rounded-full bg-orange-100 border-4 border-white flex items-center justify-center text-4xl shadow-md shrink-0 animate-pulse">
+          <div className="w-20 h-20 rounded-full bg-orange-100 border-4 border-white flex items-center justify-center text-4xl shadow-md shrink-0">
             {currentUser?.avatarEmoji || '👦🏻'}
           </div>
           <div className="space-y-1.5 text-left">
             <div className="bg-orange-500 text-white text-[11px] font-black px-3 py-1 rounded-full inline-block">
-              {currentUser?.role === 'student' ? '生命探索生' : '引導導師'}
+              {isTeacherUser ? '教師端' : '學生'}
             </div>
             <h4 className="text-base font-black text-[#5D4037]">{currentUser?.name}</h4>
-            <p className="text-xs text-slate-500 font-bold">✨ 系統已為你啟動百分之百持久化雲端儲存</p>
+            <p className="text-xs text-slate-500 font-bold">寫下的內容會跟著帳號走</p>
           </div>
         </div>
       )
     },
     {
-      title: '智慧課程地圖 ‧ 精緻數位課本',
-      subtitle: '流暢的頁面閱讀與精美圖表',
-      description: '在「課程地圖」中，你可以閱讀與實體課本完全對應的精美數位教材。每頁都配有生動的情境圖文。底部的分頁控制列會自動追蹤你的進度，點擊「下一頁」即可同步更新你的閱讀覆蓋率！',
-      badge: '數位閱讀',
+      title: '課本單元：跟實體課本對照著讀',
+      subtitle: '六個單元，讀到哪裡系統會記得',
+      description: '導覽列的「課本單元」是數位課本。左邊選單元、右邊翻頁，每一頁都有對應的情境圖文。翻頁的時候閱讀進度會自動更新，下次回來接著讀就好。',
+      badge: '數位課本',
       badgeBg: 'bg-amber-50',
       badgeText: 'text-amber-600 border-amber-200',
       icon: Map,
@@ -254,13 +266,13 @@ export default function WelcomeTour({
       graphic: (
         <div className="w-full h-44 bg-white rounded-2xl border-2 border-slate-100 p-4 flex flex-col justify-between shadow-xs">
           <div className="flex items-center justify-between border-b-2 border-slate-50 pb-2">
-            <span className="text-xs font-bold text-slate-500">單元 03：終極關懷 ‧ 課本導覽</span>
+            <span className="text-xs font-bold text-slate-500">單元 03：終極關懷</span>
             <span className="text-xs text-[#E65100] font-black bg-orange-50 border border-orange-100 px-2 py-0.5 rounded">p.079</span>
           </div>
           <div className="flex gap-2 items-start py-2">
             <span className="text-2xl">💡</span>
             <p className="text-xs text-slate-600 leading-relaxed font-bold line-clamp-2">
-              「人生不是要活得完美，而是要活得有意義。即使沒有雙手雙腳，我依然可以擁抱這個世界。」—— 力克‧胡哲
+              「人生不是要活得完美，而是要活得有意義。」
             </p>
           </div>
           <div className="flex items-center justify-between border-t-2 border-slate-50 pt-2 text-xs font-bold text-slate-400">
@@ -276,110 +288,107 @@ export default function WelcomeTour({
       )
     },
     {
-      title: '互動遊戲 ‧ 班級同樂大廳',
-      subtitle: '10 款主題遊戲，隨時開玩、隨時複習',
-      description: '點選導覽列的「互動遊戲」，就能進入班級同樂大廳。裡面有 10 款生命教育主題遊戲，涵蓋性格測驗、情境抉擇、人際關係、價值排序、記憶配對、感恩留言、哲學辯論、心情紀錄與成長徽章，每一款都能單獨遊玩，也能跟全班同步進行！',
-      badge: '互動遊戲',
+      title: '心靈迷宮：五扇門與角色的回話',
+      subtitle: '劇情 → 心象測驗 → 鑄鑰 → 反思',
+      description: '首頁最上面那張黑底卡片點「開始遊戲」。每一關先看劇情，再用「心象測驗」問自己幾個沒有對錯的問題，接著把思考碎片排成一條論證順序、鑄出鑰匙開門。最後寫下反思，那一關的角色會讀你寫的東西、回你一段話，還會再追問。',
+      badge: '心靈迷宮',
       badgeBg: 'bg-orange-50',
       badgeText: 'text-orange-600 border-orange-200',
       icon: Gamepad2,
       iconColor: 'text-orange-500',
       graphic: (
-        <div className="w-full h-44 bg-white rounded-2xl border-2 border-slate-100 p-4 flex flex-col justify-between">
-          <div className="flex items-center justify-between border-b-2 border-slate-50 pb-2">
-            <span className="text-xs font-bold text-slate-500">課堂專用互動遊戲（共 10 款）</span>
+        <div className="w-full h-44 bg-[#0B1220] rounded-2xl border-2 border-amber-500/25 p-4 flex flex-col justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-amber-400/15 border border-amber-400/40 flex items-center justify-center text-amber-300 text-sm shrink-0">◈</div>
+            <div>
+              <div className="text-[11px] font-black text-amber-200 leading-none">張曉萍</div>
+              <div className="text-[10px] text-slate-500 mt-0.5">同學</div>
+            </div>
           </div>
-          <div className="grid grid-cols-5 gap-1.5 py-2">
-            {['MBTI', '🧩', '🧭', '🕸️', '⚖️', '🎴', '🧼', '🗣️', '🌡️', '🏆'].map((label, idx) => (
-              <div key={idx} className="aspect-square rounded-lg bg-orange-50 border border-orange-100 flex items-center justify-center text-[10px] font-black text-orange-600">
-                {label}
-              </div>
-            ))}
-          </div>
-          <p className="text-[11px] font-bold text-slate-400 text-center">點擊任一款「進入遊戲」即可開始</p>
+          <p className="text-[11px] text-slate-300 leading-relaxed">
+            你說「我只是懶得吵而已」。<br />
+            我看得懂這種感覺，我也常常這樣。<br />
+            那個詞是誰先講的？
+          </p>
+          <p className="text-[10px] text-slate-500 text-center font-bold">寫完反思，角色會回你的話</p>
         </div>
       )
     },
     {
-      title: '實踐科學：WOOP 成長表單',
-      subtitle: '將生命思辨落實到日常行動中',
-      description: '「成長表單」頁面整合了廣受心理學界推崇的 WOOP 實踐架構：Wish (願望) ➔ Outcome (結果) ➔ Obstacle (障礙) ➔ Plan (計畫)。透過科學化的步驟設計，引導你將空泛的理想化為能具體實踐的生活方案！',
-      badge: 'WOOP表單',
+      title: '學習紀錄：你寫過的都在這裡',
+      subtitle: '一句一句累積起來的成長軌跡',
+      description: isTeacherUser
+        ? '「學習紀錄」看得到全班每個學生 × 每個單元的進度一覽，點任何一格就能直接跳到那份作答去批改與回覆。'
+        : '「學習紀錄」會把你在課本和遊戲裡寫過的每一段整理起來，照單元排好。回頭看的時候，最有感覺的通常是自己幾個禮拜前寫的那幾句。',
+      badge: '學習紀錄',
       badgeBg: 'bg-emerald-50',
       badgeText: 'text-emerald-600 border-emerald-200',
       icon: FileText,
       iconColor: 'text-emerald-500',
       graphic: (
-        <div className="w-full h-44 bg-gradient-to-br from-[#E8F5E9] to-[#C8E6C9] rounded-2xl border-2 border-emerald-100 p-4 flex flex-col justify-between">
-          <div className="flex items-center gap-2">
-            <span className="bg-emerald-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">實踐目標</span>
-            <span className="text-sm font-black text-[#1B5E20]">WOOP 願景計畫表</span>
-          </div>
-          <div className="grid grid-cols-4 gap-2">
+        <div className="w-full h-44 bg-white rounded-2xl border-2 border-emerald-100 p-4 flex flex-col justify-between">
+          <span className="text-xs font-black text-emerald-700">
+            {isTeacherUser ? '全班 × 單元 進度一覽' : '我的成長紀錄'}
+          </span>
+          <div className="space-y-2">
             {[
-              { t: 'W', desc: '願望 Wish', c: 'bg-white border-emerald-200 text-emerald-800' },
-              { t: 'O', desc: '結果 Outcome', c: 'bg-white border-emerald-200 text-emerald-800' },
-              { t: 'O', desc: '障礙 Obstacle', c: 'bg-white border-emerald-200 text-emerald-800' },
-              { t: 'P', desc: '計畫 Plan', c: 'bg-white border-emerald-200 text-emerald-800' }
-            ].map((step, idx) => (
-              <div key={idx} className={`border-2 p-1.5 rounded-xl flex flex-col items-center ${step.c} shadow-xs`}>
-                <span className="text-sm font-black">{step.t}</span>
-                <span className="text-[10px] font-bold text-slate-400 whitespace-nowrap scale-90">{step.desc.split(' ')[1]}</span>
+              { u: '總說', q: '原本想問為什麼，最後說了都可以' },
+              { u: '第二扇門', q: '大家都說我很乖，可是我只是懶得吵' }
+            ].map(r => (
+              <div key={r.u} className="bg-emerald-50/70 border border-emerald-100 rounded-xl px-3 py-2">
+                <div className="text-[10px] font-black text-emerald-700">{r.u}</div>
+                <div className="text-[11px] text-slate-600 font-bold truncate">{r.q}</div>
               </div>
             ))}
           </div>
-          <p className="text-xs text-[#2E7D32] bg-white/70 px-2.5 py-1.5 rounded-xl border border-white/50 text-center font-bold">
-            💡「如果遭遇障礙，我就會執行計畫...」
+          <p className="text-[10px] text-slate-400 text-center font-bold">
+            {isTeacherUser ? '點任一格直接進去批改' : '同學看不到，只有你和老師看得到'}
           </p>
         </div>
       )
     },
     {
-      title: '趣味思辨問卷 ‧ 關鍵字願景牆',
-      subtitle: '表達你的想法，與全班相互激勵',
-      description: '每個單元結束時都有設計精緻的互動思辨挑戰。完成 WOOP 願景計畫後，你可以將自己的生命一字寬 (生命關鍵字) 與一言以蔽之 (願望宣言) 發布至全班的「關鍵字牆」，看見同學們五彩斑斕的生命軌跡！',
-      badge: '思辨與社群',
-      badgeBg: 'bg-purple-50',
-      badgeText: 'text-purple-600 border-purple-200',
-      icon: MessageSquare,
-      iconColor: 'text-purple-500',
-      graphic: (
-        <div className="w-full h-44 bg-slate-50 rounded-2xl border-2 border-slate-200 p-3 flex flex-col justify-between">
-          <span className="text-xs font-black text-slate-500 block text-center">✨ 全班生命關鍵字願景牆 ✨</span>
-          <div className="flex flex-wrap gap-2 justify-center py-2">
-            <span className="bg-amber-100 text-amber-800 text-xs font-black px-3 py-1.5 rounded-xl border-2 border-amber-200 rotate-1 shadow-xs">🌱 溫柔成長</span>
-            <span className="bg-rose-100 text-rose-800 text-xs font-black px-3 py-1.5 rounded-xl border-2 border-rose-200 -rotate-2 shadow-xs">🎨 繽紛多姿</span>
-            <span className="bg-blue-100 text-blue-800 text-xs font-black px-3 py-1.5 rounded-xl border-2 border-blue-200 rotate-2 shadow-xs">🏀 永不放棄</span>
-            <span className="bg-emerald-100 text-emerald-800 text-xs font-black px-3 py-1.5 rounded-xl border-2 border-emerald-200 -rotate-1 shadow-xs">🕯️ 真誠關懷</span>
+      title: isTeacherUser ? '課堂工具箱與學習統計' : '人物介紹：先認識這幾個人',
+      subtitle: isTeacherUser ? '上課現場會用到的兩個分頁' : '課本和遊戲裡都會遇到他們',
+      description: isTeacherUser
+        ? '「工具箱」放的是上課現場的小工具，例如隨機抽人。「學習統計」是整班的完成度圖表，可以一眼看出哪個單元卡住了。右上角的「評閱」下拉可以切換你正在看哪一位學生的空間。'
+        : '「人物介紹」有陳可華、王小文、王博鈞、張曉萍和家人的角色卡與關係圖。這幾個人在課本的情境故事、遊戲的劇情裡都會出現，先認識他們，讀起來會比較有感覺。',
+      badge: isTeacherUser ? '教師工具' : '角色故事',
+      badgeBg: isTeacherUser ? 'bg-indigo-50' : 'bg-rose-50',
+      badgeText: isTeacherUser ? 'text-indigo-600 border-indigo-200' : 'text-rose-600 border-rose-200',
+      icon: isTeacherUser ? GraduationCap : UserCheck,
+      iconColor: isTeacherUser ? 'text-indigo-500' : 'text-rose-500',
+      graphic: isTeacherUser ? (
+        <div className="w-full h-44 bg-slate-900 text-slate-100 rounded-2xl border-2 border-slate-800 p-4 flex flex-col justify-between text-xs">
+          <span className="font-extrabold text-[#EA9A3E]">教師專用分頁</span>
+          <div className="flex gap-2">
+            {[
+              { n: '工具箱', d: '隨機抽人等現場工具' },
+              { n: '學習統計', d: '各單元完成度圖表' }
+            ].map(t => (
+              <div key={t.n} className="flex-1 bg-slate-800/70 border border-slate-700/60 rounded-xl p-3 text-center">
+                <div className="font-black text-slate-100 text-[12px]">{t.n}</div>
+                <div className="text-[10px] text-slate-400 mt-1 leading-relaxed">{t.d}</div>
+              </div>
+            ))}
           </div>
-          <p className="text-[10px] text-slate-400 text-center">每位同學完成 WOOP 提交後，會自動顯現在大螢幕上喔！</p>
+          <p className="text-[10.5px] text-slate-400 text-center font-bold">右上角「評閱」可切換學生空間</p>
         </div>
-      )
-    },
-    {
-      title: '解鎖榮耀勳章 ‧ 累積學習成就',
-      subtitle: '記錄每一次進步，看見成長的痕跡',
-      description: '隨著你在課堂中主動閱讀、真誠提交思辨問卷和 WOOP 表單，你將會解鎖各種獨一無二的「榮譽勳章」（如：深度思辨者、行動實踐派、全能探索家等）。點擊大頭照還能上傳或更換最有個性的個人照！',
-      badge: '成就榮譽',
-      badgeBg: 'bg-rose-50',
-      badgeText: 'text-rose-600 border-rose-200',
-      icon: Award,
-      iconColor: 'text-rose-500',
-      graphic: (
+      ) : (
         <div className="w-full h-44 bg-gradient-to-tr from-[#FFF0F2] to-[#FFE4E6] rounded-2xl border-2 border-rose-100 p-4 flex items-center justify-around">
-          <div className="flex flex-col items-center bg-white border-2 border-rose-100 p-2 rounded-xl shadow-xs w-20 text-center">
-            <span className="text-3xl">🧠</span>
-            <span className="text-[10px] font-black text-slate-800 mt-1 whitespace-nowrap">深度思辨者</span>
-          </div>
-          <div className="flex flex-col items-center bg-white border-2 border-amber-100 p-2.5 rounded-xl shadow-md w-24 text-center scale-110 -rotate-3 relative">
-            <span className="absolute -top-1.5 -right-1.5 text-sm">⭐</span>
-            <span className="text-4xl">🏃🏻</span>
-            <span className="text-xs font-black text-slate-800 mt-1 whitespace-nowrap font-extrabold">行動實踐派</span>
-          </div>
-          <div className="flex flex-col items-center bg-white border-2 border-rose-100 p-2 rounded-xl shadow-xs w-20 text-center">
-            <span className="text-3xl">✨</span>
-            <span className="text-[10px] font-black text-slate-800 mt-1 whitespace-nowrap">生命探索家</span>
-          </div>
+          {[
+            { name: '陳可華', role: '班長', emoji: '👦🏻' },
+            { name: '王小文', role: '博士', emoji: '👧🏻' },
+            { name: '張曉萍', role: '同學', emoji: '👩🏻' }
+          ].map((item) => (
+            <div key={item.name} className="flex flex-col items-center bg-white p-2.5 rounded-2xl shadow-xs border-2 border-rose-50 w-24">
+              <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center text-2xl mb-1.5 border border-white/80 shadow-md">
+                {item.emoji}
+              </div>
+              <span className="text-sm font-black text-slate-800">{item.name}</span>
+              <span className="text-[11px] font-bold text-slate-400 mt-0.5">{item.role}</span>
+            </div>
+          ))}
         </div>
       )
     }
@@ -446,13 +455,11 @@ export default function WelcomeTour({
           {/* Core Content area */}
           <div className="p-7 md:p-9 space-y-6 flex-1 overflow-y-auto">
             
-            {/* Header section with step indicator */}
-            <div className="flex items-center justify-between">
-              <span className={`text-xs font-black tracking-widest px-3.5 py-1.5 rounded-full border-2 ${activeStepData.badgeBg} ${activeStepData.badgeText}`}>
+            {/* 只放標籤。頁碼原本擺在這一列的右邊，會被右上角的 ✕ 壓住
+                （✕ 是 absolute 定位、蓋在內容上），所以移到底部跟進度點放一起。 */}
+            <div className="pr-12">
+              <span className={`inline-block text-xs font-black tracking-widest px-3.5 py-1.5 rounded-full border-2 ${activeStepData.badgeBg} ${activeStepData.badgeText}`}>
                 {activeStepData.badge}
-              </span>
-              <span className="text-sm font-black text-slate-400 font-sans">
-                引導頁碼：{currentStep + 1} / {steps.length}
               </span>
             </div>
 
@@ -481,17 +488,23 @@ export default function WelcomeTour({
 
           {/* Footer Navigation Bar */}
           <div className="bg-slate-50 px-7 py-5 border-t-2 border-slate-100 flex items-center justify-between">
-            {/* Progress dots indicator */}
-            <div className="flex items-center gap-2">
-              {steps.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setCurrentStep(idx)}
-                  className={`h-2.5 rounded-full transition-all duration-300 ${
-                    idx === currentStep ? 'w-6 bg-orange-600' : 'w-2.5 bg-slate-200'
-                  }`}
-                />
-              ))}
+            {/* 進度點 ＋ 頁碼（頁碼從右上角移下來，那裡被 ✕ 佔著）*/}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                {steps.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentStep(idx)}
+                    aria-label={`第 ${idx + 1} 頁`}
+                    className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                      idx === currentStep ? 'w-6 bg-orange-600' : 'w-2.5 bg-slate-200 hover:bg-slate-300'
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-xs font-black text-slate-400 tabular-nums">
+                {currentStep + 1} / {steps.length}
+              </span>
             </div>
 
             {/* Navigation buttons - larger text sizes and padding */}
